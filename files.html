@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Files - Agent Outputs</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(45deg, #0a0e1a, #1e3a8a); 
+            color: white; margin: 0; padding: 20px; min-height: 100vh;
+        }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .nav { display: flex; gap: 15px; }
+        .nav a { 
+            color: #60a5fa; text-decoration: none; padding: 8px 16px; 
+            border-radius: 5px; transition: background 0.3s;
+        }
+        .nav a:hover, .nav a.active { background: rgba(96, 165, 250, 0.2); }
+        .logout-btn { 
+            padding: 8px 16px; background: #dc2626; color: white; 
+            border: none; border-radius: 5px; cursor: pointer;
+        }
+        .breadcrumb { 
+            background: rgba(30, 41, 59, 0.8); padding: 15px; 
+            border-radius: 8px; margin-bottom: 20px; font-size: 14px;
+        }
+        .file-browser { 
+            display: grid; grid-template-columns: 300px 1fr; 
+            gap: 20px; min-height: 600px;
+        }
+        .sidebar { 
+            background: rgba(30, 41, 59, 0.8); padding: 20px; 
+            border-radius: 10px; height: fit-content;
+        }
+        .folder { 
+            padding: 8px 12px; cursor: pointer; border-radius: 5px; 
+            margin: 2px 0; transition: background 0.3s;
+        }
+        .folder:hover { background: rgba(59, 130, 246, 0.2); }
+        .folder.active { background: rgba(59, 130, 246, 0.3); }
+        .content { 
+            background: rgba(30, 41, 59, 0.8); padding: 20px; 
+            border-radius: 10px; overflow-y: auto;
+        }
+        .file-list { display: flex; flex-direction: column; gap: 8px; }
+        .file-item { 
+            display: flex; align-items: center; gap: 12px; 
+            padding: 12px; background: rgba(55, 65, 81, 0.5); 
+            border-radius: 6px; cursor: pointer; transition: all 0.3s;
+        }
+        .file-item:hover { background: rgba(55, 65, 81, 0.8); transform: translateX(4px); }
+        .file-icon { font-size: 20px; width: 24px; text-align: center; }
+        .file-info { flex: 1; }
+        .file-name { font-weight: 500; }
+        .file-meta { font-size: 12px; color: #94a3b8; }
+        .file-preview { 
+            background: rgba(15, 23, 42, 0.8); padding: 20px; 
+            border-radius: 8px; margin-top: 20px; 
+            border-left: 4px solid #3b82f6;
+        }
+        .agent-tag { 
+            background: #8b5cf6; color: white; padding: 2px 8px; 
+            border-radius: 12px; font-size: 10px; font-weight: bold;
+        }
+        .file-actions { 
+            display: flex; gap: 8px; 
+        }
+        .action-btn { 
+            padding: 4px 8px; background: rgba(59, 130, 246, 0.3); 
+            border: none; border-radius: 4px; color: white; 
+            cursor: pointer; font-size: 11px;
+        }
+        .search-box { 
+            width: 100%; padding: 10px; margin-bottom: 15px; 
+            background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(55, 65, 81, 0.5); 
+            border-radius: 5px; color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>📁 Agent File System</h1>
+            <p>Browse deliverables and outputs from all 32 agents</p>
+        </div>
+        <div class="nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="files.html" class="active">Files</a>
+            <a href="agents.html">Agents</a>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="breadcrumb">
+        📍 <span id="currentPath">/book-launch-hq/deliverables</span>
+    </div>
+    
+    <input type="text" class="search-box" placeholder="🔍 Search files and deliverables..." onkeyup="searchFiles(this.value)">
+    
+    <div class="file-browser">
+        <div class="sidebar">
+            <h3>📂 Project Structure</h3>
+            <div class="folder active" onclick="loadFolder('deliverables')">
+                📁 Deliverables
+            </div>
+            <div class="folder" onclick="loadFolder('covers')">
+                🎨 Cover Designs
+            </div>
+            <div class="folder" onclick="loadFolder('content')">
+                📝 Content & Copy
+            </div>
+            <div class="folder" onclick="loadFolder('marketing')">
+                📢 Marketing Materials
+            </div>
+            <div class="folder" onclick="loadFolder('reports')">
+                📊 Agent Reports
+            </div>
+            <div class="folder" onclick="loadFolder('scripts')">
+                ⚙️ Automation Scripts
+            </div>
+            <div class="folder" onclick="loadFolder('research')">
+                🔍 Research & Analysis
+            </div>
+            <div class="folder" onclick="loadFolder('templates')">
+                📋 Templates
+            </div>
+        </div>
+        
+        <div class="content">
+            <h3 id="folderTitle">📁 Recent Deliverables</h3>
+            <div id="fileList" class="file-list">
+                <!-- Files will be loaded here -->
+            </div>
+            
+            <div id="filePreview" class="file-preview" style="display: none;">
+                <h4 id="previewTitle">File Preview</h4>
+                <div id="previewContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // Mock file system data (in production, this would come from your actual project)
+        const fileSystem = {
+            deliverables: [
+                { 
+                    name: 'back-cover-copy.md', 
+                    agent: 'Content Strategist', 
+                    size: '2.1 KB', 
+                    date: 'Feb 17',
+                    content: `# Back Cover Copy\n\n**THE TESTOSTERONE PROTOCOL**\n\n*Before You Commit to Weekly Injections for Life, Discover the Science-Based System That Helped 1,000+ Men Optimize Their T Levels Naturally*\n\nYour grandfather had more testosterone at 40 than you do today...\n\n[Full back cover copy content]`
+                },
+                { 
+                    name: 'final-chapter-outline.md', 
+                    agent: 'Content Strategist', 
+                    size: '5.2 KB', 
+                    date: 'Feb 17',
+                    content: `# The Testosterone Protocol - Final Chapter Outline\n\n## Chapter 1: The Testosterone Crisis\n- Why modern men have 50% less testosterone\n- Environmental factors destroying male hormones\n- The medical industry's one-size-fits-all approach\n\n## Chapter 2: The Rapid T-Assessment\n- 10-minute self-assessment tool\n- When to optimize vs. when to seek medical help\n- Understanding your baseline\n\n[Additional chapters...]`
+                },
+                { 
+                    name: 'email-sequence-1.md', 
+                    agent: 'Email Marketer', 
+                    size: '1.8 KB', 
+                    date: 'Feb 17',
+                    content: `# Email Sequence #1: Welcome & Assessment\n\n**Subject:** Your T-levels might be 50% lower than your grandfather's\n\n**Body:**\nHi [NAME],\n\nWelcome to The Testosterone Protocol community.\n\nI have some shocking news to share with you...\n\n[Email content continues]`
+                },
+                { 
+                    name: 'linkedin-post-sample.md', 
+                    agent: 'Social Media Manager', 
+                    size: '0.9 KB', 
+                    date: 'Feb 17',
+                    content: `# LinkedIn Post Sample\n\nAt 38, my testosterone crashed to barely functional levels.\n\nMy doctor offered two options:\n→ Start TRT immediately\n→ "Just eat better and exercise"\n\nAs a systems engineer, I knew there had to be a third way.\n\n9 months later, my testosterone had nearly tripled—without a single injection.\n\nHere's what I learned... 🧵`
+                }
+            ],
+            covers: [
+                { 
+                    name: 'executive-suite-cover.png', 
+                    agent: 'Cover Designer', 
+                    size: '4.3 MB', 
+                    date: 'Feb 18',
+                    type: 'image',
+                    content: '🖼️ Professional executive-style cover design with blue/gray color scheme'
+                },
+                { 
+                    name: 'natural-elements-cover.png', 
+                    agent: 'Cover Designer', 
+                    size: '6.8 MB', 
+                    date: 'Feb 18',
+                    type: 'image',
+                    content: '🖼️ Nature-inspired cover with organic elements and earth tones'
+                },
+                { 
+                    name: 'scientific-authority-cover.png', 
+                    agent: 'Cover Designer', 
+                    size: '5.4 MB', 
+                    date: 'Feb 18',
+                    type: 'image',
+                    content: '🖼️ Research-focused design emphasizing scientific credibility'
+                },
+                { 
+                    name: 'energy-transformation-cover.png', 
+                    agent: 'Cover Designer', 
+                    size: '6.4 MB', 
+                    date: 'Feb 18',
+                    type: 'image',
+                    content: '🖼️ Dynamic design highlighting transformation and energy'
+                }
+            ],
+            reports: [
+                { 
+                    name: 'pipeline-summary.md', 
+                    agent: 'Performance Analyst', 
+                    size: '3.4 KB', 
+                    date: 'Feb 17',
+                    content: `# Pipeline Execution Summary\n\n## Agents 3-24 Simulated Outputs\n\n### Agent 5/24: Cover Designer — SCORE: 7.2/10 — PASS ✅\n- Created 4 cover concepts\n- Professional but generic\n- Needs more distinctive style\n\n### Agent 6/24: Brand Designer — SCORE: 6.8/10 — PASS ✅\n- Basic color palette\n- Typography choices safe\n- Lacks unique identity`
+                },
+                { 
+                    name: 'agent-performance.json', 
+                    agent: 'Quality Controller', 
+                    size: '12.3 KB', 
+                    date: 'Feb 18',
+                    content: `{\n  "summary": {\n    "total_agents": 32,\n    "active": 24,\n    "average_score": 7.9,\n    "completion_rate": "60%"\n  },\n  "performance": {\n    "editorial": 9.2,\n    "design": 7.8,\n    "marketing": 6.5,\n    "operations": 8.8\n  }\n}`
+                }
+            ]
+        };
+        
+        let currentFolder = 'deliverables';
+        let allFiles = [];
+        
+        // Initialize
+        loadFolder('deliverables');
+        
+        function loadFolder(folder) {
+            currentFolder = folder;
+            document.getElementById('currentPath').textContent = `/book-launch-hq/${folder}`;
+            
+            // Update active folder
+            document.querySelectorAll('.folder').forEach(f => f.classList.remove('active'));
+            event?.target.classList.add('active');
+            
+            const files = fileSystem[folder] || [];
+            allFiles = files;
+            displayFiles(files);
+            
+            // Update title
+            const titles = {
+                deliverables: '📁 Recent Deliverables',
+                covers: '🎨 Cover Designs (4 Concepts)',
+                content: '📝 Content & Copy',
+                marketing: '📢 Marketing Materials', 
+                reports: '📊 Agent Reports & Analytics',
+                scripts: '⚙️ Automation Scripts',
+                research: '🔍 Research & Analysis',
+                templates: '📋 Templates'
+            };
+            document.getElementById('folderTitle').textContent = titles[folder] || folder;
+        }
+        
+        function displayFiles(files) {
+            const fileList = document.getElementById('fileList');
+            
+            if (files.length === 0) {
+                fileList.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 40px;">📂 No files in this folder yet</div>';
+                return;
+            }
+            
+            fileList.innerHTML = files.map(file => `
+                <div class="file-item" onclick="previewFile('${file.name}')">
+                    <span class="file-icon">${getFileIcon(file.name)}</span>
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-meta">
+                            <span class="agent-tag">${file.agent}</span>
+                            ${file.size} • ${file.date}
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="action-btn" onclick="downloadFile('${file.name}', event)">📥 View</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'md': '📄', 'txt': '📄', 'pdf': '📕',
+                'png': '🖼️', 'jpg': '🖼️', 'jpeg': '🖼️',
+                'json': '🔧', 'js': '⚙️', 'sh': '⚙️',
+                'html': '🌐', 'css': '🎨'
+            };
+            return icons[ext] || '📄';
+        }
+        
+        function previewFile(filename) {
+            const file = allFiles.find(f => f.name === filename);
+            if (!file) return;
+            
+            const preview = document.getElementById('filePreview');
+            const title = document.getElementById('previewTitle');
+            const content = document.getElementById('previewContent');
+            
+            title.textContent = `📄 ${filename}`;
+            
+            if (file.type === 'image') {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 8px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🖼️</div>
+                            <p>${file.content}</p>
+                            <small style="color: #94a3b8;">Image preview not available in demo mode</small>
+                        </div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div style="background: rgba(15, 23, 42, 0.8); padding: 15px; border-radius: 5px; font-family: monospace; font-size: 13px; white-space: pre-wrap; max-height: 300px; overflow-y: auto;">
+${file.content}
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #94a3b8;">
+                        📊 Created by: <strong>${file.agent}</strong> • ${file.size} • ${file.date}
+                    </div>
+                `;
+            }
+            
+            preview.style.display = 'block';
+        }
+        
+        function downloadFile(filename, event) {
+            event.stopPropagation();
+            alert(`📥 Download: ${filename}\n\nIn production version:\n• Direct file download\n• Open in editor\n• View full content\n• Export options`);
+        }
+        
+        function searchFiles(query) {
+            if (!query) {
+                displayFiles(fileSystem[currentFolder] || []);
+                return;
+            }
+            
+            const filtered = allFiles.filter(file => 
+                file.name.toLowerCase().includes(query.toLowerCase()) ||
+                file.agent.toLowerCase().includes(query.toLowerCase())
+            );
+            displayFiles(filtered);
+        }
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

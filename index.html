@@ -27,7 +27,7 @@
         button:hover { background: #1d4ed8; }
         .error { color: #ff6b6b; margin: 10px 0; }
         .success { color: #51cf66; margin: 10px 0; }
-        .debug { background: rgba(255,255,255,0.1); padding: 10px; margin: 10px 0; font-size: 12px; }
+        .info { background: rgba(59, 130, 246, 0.2); padding: 15px; margin: 15px 0; border-radius: 8px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -35,72 +35,71 @@
         <h1>🚀 The Testosterone Protocol</h1>
         <h2>Launch Dashboard</h2>
         
-        <div class="debug">
-            <strong>Valid Credentials:</strong><br>
-            teis / launch2026<br>
-            admin / testosterone2026<br>
-            guest / preview123
+        <div class="info">
+            <strong>🔐 SECURE ACCESS</strong><br>
+            New passwords activated for security
         </div>
         
-        <input type="text" id="user" placeholder="Username" value="teis">
-        <input type="password" id="pass" placeholder="Password" value="launch2026">
-        <button onclick="login()">LOGIN</button>
+        <input type="text" id="user" placeholder="Username" autofocus>
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="login()">ACCESS DASHBOARD</button>
         
         <div id="message"></div>
         
-        <div class="debug">
-            <strong>Debug Info:</strong><br>
-            <div id="debug"></div>
+        <div class="info">
+            <small>🛡️ Session expires after 8 hours<br>
+            🔒 Client-side authentication active</small>
         </div>
     </div>
 
     <script>
-        function debug(msg) {
-            document.getElementById('debug').innerHTML += msg + '<br>';
-        }
-        
         function login() {
-            debug('Login attempt started...');
-            
             const username = document.getElementById('user').value.toLowerCase().trim();
             const password = document.getElementById('pass').value;
             const msgDiv = document.getElementById('message');
             
-            debug('Username: "' + username + '"');
-            debug('Password length: ' + password.length);
-            
-            // Clear message
             msgDiv.innerHTML = '';
             
-            // Simple credential check
+            // NEW SECURE CREDENTIALS
             const validLogins = {
-                'teis': 'launch2026',
-                'admin': 'testosterone2026',
-                'guest': 'preview123'
+                'teis': 'SecureLaunch2026!',
+                'admin': 'AdminProtocol2026#',
+                'viewer': 'ViewAccess2026$'
             };
             
             if (validLogins[username] && validLogins[username] === password) {
-                debug('✅ Credentials valid!');
-                msgDiv.innerHTML = '<div class="success">✅ Login successful! Redirecting...</div>';
+                msgDiv.innerHTML = '<div class="success">✅ Access granted! Loading dashboard...</div>';
                 
-                // Store login
-                sessionStorage.setItem('loggedIn', 'true');
-                sessionStorage.setItem('user', username);
-                
-                debug('Session stored. Redirecting in 2 seconds...');
+                // Store secure session
+                sessionStorage.setItem('authenticated', 'true');
+                sessionStorage.setItem('username', username);
+                sessionStorage.setItem('loginTime', Date.now());
+                sessionStorage.setItem('sessionId', 'sess_' + Date.now() + '_' + Math.random().toString(36));
                 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 2000);
+                }, 1500);
                 
             } else {
-                debug('❌ Credentials invalid');
-                msgDiv.innerHTML = '<div class="error">❌ Invalid login. Try: teis / launch2026</div>';
+                msgDiv.innerHTML = '<div class="error">❌ Access denied. Contact admin for credentials.</div>';
+                // Clear form on failure
+                document.getElementById('pass').value = '';
             }
         }
         
-        // Auto-fill for testing
-        debug('Page loaded. Auto-filled teis/launch2026 for testing.');
+        // Auto-logout after 8 hours
+        const loginTime = sessionStorage.getItem('loginTime');
+        if (loginTime && (Date.now() - parseInt(loginTime)) > 8 * 60 * 60 * 1000) {
+            sessionStorage.clear();
+        }
+        
+        // Check if already authenticated
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            const loginTime = sessionStorage.getItem('loginTime');
+            if (loginTime && (Date.now() - parseInt(loginTime)) < 8 * 60 * 60 * 1000) {
+                window.location.href = 'dashboard.html';
+            }
+        }
         
         // Enter key support
         document.addEventListener('keypress', function(e) {
