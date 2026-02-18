@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Files - Agent Outputs</title>
+    <script src="covers-data.js"></script>
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -330,7 +331,63 @@
             
             title.textContent = `📄 ${filename}`;
             
-            if (file.type === 'image') {
+            // Enhanced cover file preview
+            if (file.type === 'image' && filename.includes('cover')) {
+                const coverData = window.actualCovers && window.actualCovers[filename];
+                if (coverData) {
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                <h4 style="color: #60a5fa; margin-bottom: 15px;">📊 Cover Details</h4>
+                                <div style="margin-bottom: 8px;"><strong>Style:</strong> ${coverData.style}</div>
+                                <div style="margin-bottom: 8px;"><strong>Dimensions:</strong> ${coverData.dimensions}</div>
+                                <div style="margin-bottom: 8px;"><strong>Format:</strong> ${coverData.format} @ ${coverData.dpi} DPI</div>
+                                <div style="margin-bottom: 8px;"><strong>Status:</strong> <span style="color: #f59e0b;">${coverData.status}</span></div>
+                                <div style="margin-bottom: 15px;"><strong>Feedback:</strong> ${coverData.feedback}</div>
+                                
+                                <h5 style="color: #8b5cf6; margin-bottom: 10px;">🎨 Color Palette</h5>
+                                <div style="display: flex; gap: 8px;">
+                                    ${coverData.colors.map(color => `<div style="width: 30px; height: 30px; background: ${color}; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);"></div>`).join('')}
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                <h4 style="color: #60a5fa; margin-bottom: 15px;">📝 Description</h4>
+                                <p style="line-height: 1.6; margin-bottom: 15px;">${coverData.description}</p>
+                                
+                                <h5 style="color: #10b981; margin-bottom: 10px;">🎯 Target Audience</h5>
+                                <p style="font-size: 14px; color: #94a3b8;">${getAudienceForStyle(coverData.style)}</p>
+                                
+                                <div style="margin-top: 20px; padding: 12px; background: rgba(59, 130, 246, 0.2); border-radius: 6px;">
+                                    <strong style="color: #60a5fa;">💡 Recommendation:</strong><br>
+                                    <span style="font-size: 14px;">${getRecommendationForStyle(coverData.style)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(220, 38, 38, 0.1); border-radius: 8px; border-left: 4px solid #dc2626;">
+                            <strong>🖼️ High-Resolution Cover Image</strong><br>
+                            <p style="margin: 8px 0; color: #94a3b8;">File location: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; font-size: 12px;">${coverData.path}</code></p>
+                            <p style="font-size: 14px; color: #fca5a5;">Image preview requires file system access. Download file to view full cover design.</p>
+                            
+                            <div style="margin-top: 15px;">
+                                <button onclick="alert('📥 Download Cover\\n\\nFile: ${filename}\\nSize: ${coverData.size}\\nFormat: Print-ready ${coverData.format}\\n\\nIn production: Direct download link')" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 10px;">📥 Download</button>
+                                <button onclick="alert('🔄 Request Changes\\n\\nCurrent Status: ${coverData.status}\\nFeedback: ${coverData.feedback}\\n\\nWould redirect to feedback form')" style="background: #f59e0b; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">💬 Feedback</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 8px;">
+                                <div style="font-size: 48px; margin-bottom: 10px;">🖼️</div>
+                                <p>${file.content}</p>
+                                <small style="color: #94a3b8;">Image preview not available in demo mode</small>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else if (file.type === 'image') {
                 content.innerHTML = `
                     <div style="text-align: center; padding: 20px;">
                         <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 8px;">
@@ -352,6 +409,26 @@ ${file.content}
             }
             
             preview.style.display = 'block';
+        }
+        
+        function getAudienceForStyle(style) {
+            const audiences = {
+                'Corporate/Professional': 'Business executives, corporate professionals, high-income males 35-50',
+                'Natural/Organic': 'Health-conscious individuals, wellness enthusiasts, natural lifestyle advocates',
+                'Scientific/Medical': 'Research-minded readers, medical professionals, data-driven decision makers',
+                'Dynamic/Energetic': 'Fitness enthusiasts, younger professionals, action-oriented individuals'
+            };
+            return audiences[style] || 'General audience';
+        }
+        
+        function getRecommendationForStyle(style) {
+            const recommendations = {
+                'Corporate/Professional': 'Best for LinkedIn ads, executive book clubs, business conferences',
+                'Natural/Organic': 'Perfect for wellness websites, health food stores, holistic practitioners', 
+                'Scientific/Medical': 'Ideal for medical journals, research presentations, doctor recommendations',
+                'Dynamic/Energetic': 'Great for fitness influencers, gym partnerships, younger demographics'
+            };
+            return recommendations[style] || 'Good for general marketing';
         }
         
         function downloadFile(filename, event) {
