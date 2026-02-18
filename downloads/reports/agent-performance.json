@@ -1,0 +1,186 @@
+{
+  "report_metadata": {
+    "generated_by": "Performance Analyst Agent",
+    "report_date": "2026-02-18",
+    "report_type": "Agent Performance Summary",
+    "time_period": "Launch Cycle 1",
+    "total_agents": 32,
+    "active_agents": 24,
+    "completion_status": "60%"
+  },
+  "executive_summary": {
+    "overall_score": 7.9,
+    "top_performers": ["Content Formatter", "Audience Research", "Pricing Strategist"],
+    "improvement_needed": ["Social Media Manager", "Affiliate Manager", "Brand Designer"],
+    "critical_blockers": 3,
+    "on_track_for_launch": true
+  },
+  "team_performance": {
+    "editorial_team": {
+      "team_size": 5,
+      "average_score": 9.2,
+      "status": "excellent",
+      "completion_rate": "100%",
+      "key_deliverables": [
+        "Final manuscript (100%)",
+        "Content editing (100%)", 
+        "Proofreading (100%)",
+        "Chapter formatting (100%)"
+      ],
+      "notes": "Editorial team consistently exceeds expectations"
+    },
+    "design_team": {
+      "team_size": 5,
+      "average_score": 7.8,
+      "status": "good_with_blockers", 
+      "completion_rate": "75%",
+      "key_deliverables": [
+        "Cover concepts (4x) - Complete",
+        "Brand guidelines - Complete", 
+        "Cover approval - BLOCKED",
+        "Marketing visuals - Pending"
+      ],
+      "notes": "Waiting on author feedback for 3 days"
+    },
+    "marketing_team": {
+      "team_size": 8,
+      "average_score": 6.5,
+      "status": "overloaded",
+      "completion_rate": "30%", 
+      "key_deliverables": [
+        "Back cover copy - Complete",
+        "Email sequence #1 - Complete",
+        "Social media content - 20%",
+        "PR campaign - Blocked by media kit"
+      ],
+      "notes": "Team capacity exceeded, need resource reallocation"
+    },
+    "operations_team": {
+      "team_size": 4,
+      "average_score": 8.8,
+      "status": "excellent",
+      "completion_rate": "95%",
+      "key_deliverables": [
+        "Infrastructure setup - Complete",
+        "Analytics tracking - Complete", 
+        "Quality assurance - Complete",
+        "DevOps pipeline - 90%"
+      ],
+      "notes": "Operations running smoothly, ahead of schedule"
+    },
+    "revenue_team": {
+      "team_size": 4,
+      "average_score": 8.2,
+      "status": "very_good",
+      "completion_rate": "85%",
+      "key_deliverables": [
+        "Pricing strategy - Complete",
+        "Upsell architecture - Complete",
+        "Affiliate program - 60%", 
+        "Revenue optimization - 80%"
+      ],
+      "notes": "Strong performance, revenue model validated"
+    },
+    "intelligence_team": {
+      "team_size": 4,
+      "average_score": 8.7,
+      "status": "excellent", 
+      "completion_rate": "90%",
+      "key_deliverables": [
+        "Market research - Complete",
+        "Audience analysis - Complete",
+        "Keyword research - Complete",
+        "Performance metrics - 85%"
+      ],
+      "notes": "Intelligence providing high-quality insights"
+    }
+  },
+  "individual_agent_scores": {
+    "content_formatter": {
+      "score": 9.2,
+      "status": "excellent",
+      "specialization": "Content formatting and structure",
+      "key_achievement": "Created perfect Kindle and PDF templates"
+    },
+    "audience_researcher": {
+      "score": 9.0,
+      "status": "excellent", 
+      "specialization": "Target audience analysis",
+      "key_achievement": "Detailed persona development and journey mapping"
+    },
+    "pricing_strategist": {
+      "score": 9.0,
+      "status": "excellent",
+      "specialization": "Pricing and monetization",
+      "key_achievement": "Validated $29 price point with upsell ladder"
+    },
+    "cover_designer": {
+      "score": 7.2,
+      "status": "good_but_blocked",
+      "specialization": "Cover design and visual concepts", 
+      "key_issue": "Created 4 concepts but awaiting author approval"
+    },
+    "social_media_manager": {
+      "score": 5.8,
+      "status": "needs_improvement",
+      "specialization": "Social media strategy and content",
+      "key_issue": "Content calendar sparse, needs audience focus"
+    },
+    "affiliate_manager": {
+      "score": 5.2,
+      "status": "needs_improvement",
+      "specialization": "Affiliate program management",
+      "key_issue": "Basic program structure, weak recruitment plan"
+    }
+  },
+  "critical_path_analysis": {
+    "current_blockers": [
+      {
+        "issue": "Cover Design Approval",
+        "severity": "high",
+        "impact": "Blocks marketing materials, social content, PR campaign",
+        "days_delayed": 3,
+        "resolution_needed": "Author feedback and approval"
+      },
+      {
+        "issue": "Media Kit Completion", 
+        "severity": "high",
+        "impact": "Stalls PR outreach and media interviews",
+        "requirements": ["Author bio", "High-res photos", "Book description"]
+      },
+      {
+        "issue": "Amazon KDP Verification",
+        "severity": "medium",
+        "impact": "May delay pre-orders in key markets",
+        "status": "Pending with support team"
+      }
+    ]
+  },
+  "performance_trends": {
+    "week_over_week_improvement": "+12%",
+    "completion_velocity": "8.5 tasks/day",
+    "quality_score_trend": "increasing",
+    "team_morale": "high",
+    "predicted_launch_readiness": "March 18, 2026"
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Escalate cover approval to author",
+      "Complete media kit by Feb 20",
+      "Reallocate 2 operations agents to marketing team"
+    ],
+    "process_improvements": [
+      "Implement daily standup for design team",
+      "Create approval workflows with SLA",
+      "Add backup plans for critical path items"
+    ],
+    "resource_allocation": [
+      "Marketing team needs 2 additional agents",
+      "Social media manager requires content strategy support", 
+      "Consider outsourcing affiliate program development"
+    ]
+  },
+  "next_review_date": "2026-02-20",
+  "report_confidence": "high",
+  "data_sources": ["Agent task logs", "Quality assessments", "Timeline tracking", "Stakeholder feedback"]
+}

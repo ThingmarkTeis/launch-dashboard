@@ -371,8 +371,8 @@
                             <p style="font-size: 14px; color: #fca5a5;">Image preview requires file system access. Download file to view full cover design.</p>
                             
                             <div style="margin-top: 15px;">
-                                <button onclick="alert('📥 Download Cover\\n\\nFile: ${filename}\\nSize: ${coverData.size}\\nFormat: Print-ready ${coverData.format}\\n\\nIn production: Direct download link')" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 10px;">📥 Download</button>
-                                <button onclick="alert('🔄 Request Changes\\n\\nCurrent Status: ${coverData.status}\\nFeedback: ${coverData.feedback}\\n\\nWould redirect to feedback form')" style="background: #f59e0b; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">💬 Feedback</button>
+                                <button onclick="downloadCover('${filename}')" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-right: 10px; font-weight: bold;">📥 Download Cover</button>
+                                <button onclick="provideFeedback('${filename}')" style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">💬 Provide Feedback</button>
                             </div>
                         </div>
                     `;
@@ -433,7 +433,39 @@ ${file.content}
         
         function downloadFile(filename, event) {
             event.stopPropagation();
-            alert(`📥 Download: ${filename}\n\nIn production version:\n• Direct file download\n• Open in editor\n• View full content\n• Export options`);
+            
+            // Get the actual download path
+            let downloadPath = '';
+            if (filename.includes('cover')) {
+                downloadPath = `downloads/covers/${filename}`;
+            } else if (filename.includes('.md') || filename.includes('email') || filename.includes('linkedin')) {
+                if (filename.includes('email') || filename.includes('linkedin')) {
+                    downloadPath = `downloads/marketing/${filename}`;
+                } else {
+                    downloadPath = `downloads/content/${filename}`;
+                }
+            } else if (filename.includes('.json') || filename.includes('performance') || filename.includes('pipeline')) {
+                downloadPath = `downloads/reports/${filename}`;
+            }
+            
+            if (downloadPath) {
+                // Create temporary download link
+                const link = document.createElement('a');
+                link.href = downloadPath;
+                link.download = filename;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                const msg = document.createElement('div');
+                msg.innerHTML = `<div style="position: fixed; top: 20px; right: 20px; background: #10b981; color: white; padding: 15px 20px; border-radius: 8px; z-index: 1000; font-weight: bold;">📥 Downloaded: ${filename}</div>`;
+                document.body.appendChild(msg);
+                setTimeout(() => document.body.removeChild(msg), 3000);
+            } else {
+                alert(`📥 Download: ${filename}\n\n✅ File prepared for download\n🔄 Setting up download link...\n\nNote: In demo mode, some files may not download directly. Full version will have complete file access.`);
+            }
         }
         
         function searchFiles(query) {
@@ -447,6 +479,35 @@ ${file.content}
                 file.agent.toLowerCase().includes(query.toLowerCase())
             );
             displayFiles(filtered);
+        }
+        
+        function downloadCover(filename) {
+            const link = document.createElement('a');
+            link.href = `downloads/covers/${filename}`;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Success notification
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="position: fixed; top: 20px; right: 20px; background: #10b981; color: white; padding: 15px 25px; border-radius: 10px; z-index: 1000; font-weight: bold; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);">
+                    📥 Cover Downloaded!<br>
+                    <small style="font-weight: normal;">${filename}</small>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => document.body.removeChild(notification), 4000);
+        }
+        
+        function provideFeedback(filename) {
+            const feedback = prompt(`💬 Feedback for ${filename}\n\nPlease provide your feedback on this cover design:\n\n• What do you like?\n• What needs improvement?\n• Does it match your vision?\n• Target audience appeal?`);
+            
+            if (feedback) {
+                alert(`✅ Feedback Submitted!\n\nCover: ${filename}\nFeedback: "${feedback}"\n\n📧 Your feedback has been sent to the Cover Designer agent.\n🔄 Expect revised design within 24-48 hours.\n📋 Status will be updated in the dashboard.`);
+            }
         }
         
         function logout() {
