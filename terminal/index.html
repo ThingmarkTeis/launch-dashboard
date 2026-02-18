@@ -254,6 +254,16 @@
                 <div class="loading">Loading activity...</div>
             </div>
         </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('funnel')">
+                <div class="section-title">◆ FUNNEL PIPELINE</div>
+                <div class="section-toggle" id="funnel-toggle">EXPAND</div>
+            </div>
+            <div id="funnel" style="display: none;">
+                <div class="loading">Loading funnel data...</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -420,6 +430,56 @@
             document.getElementById('activity').innerHTML = html;
         }
 
+        function renderFunnel(data) {
+            // Calculate funnel stages based on department activity
+            const stages = [
+                { 
+                    name: 'RESEARCH', 
+                    progress: data.departments['content-boss'] ? 100 : 0,
+                    color: data.departments['content-boss'] ? '#0f0' : '#666'
+                },
+                { 
+                    name: 'CONTENT', 
+                    progress: data.departments['content-boss']?.fileCount > 0 ? 100 : 0,
+                    color: data.departments['content-boss']?.fileCount > 0 ? '#0f0' : '#666'
+                },
+                { 
+                    name: 'DESIGN', 
+                    progress: data.departments['design-boss']?.fileCount > 0 ? 80 : 0,
+                    color: data.departments['design-boss']?.fileCount > 0 ? '#ff0' : '#666'
+                },
+                { 
+                    name: 'LAUNCH', 
+                    progress: data.departments['launch-boss']?.fileCount > 0 ? 50 : 0,
+                    color: data.departments['launch-boss']?.fileCount > 0 ? '#ff0' : '#666'
+                },
+                { 
+                    name: 'MARKETING', 
+                    progress: data.departments['ads-boss']?.fileCount > 0 ? 20 : 0,
+                    color: data.departments['ads-boss']?.fileCount > 0 ? '#f00' : '#666'
+                }
+            ];
+            
+            let html = '<div style="display: grid; gap: 15px;">';
+            
+            stages.forEach(stage => {
+                html += `
+                    <div style="border: 1px solid ${stage.color}; padding: 15px; background: rgba(0, 255, 0, 0.02);">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <div style="flex: 1; font-weight: bold;">${stage.name}</div>
+                            <div style="color: ${stage.color};">${stage.progress}%</div>
+                        </div>
+                        <div style="background: #333; height: 10px; border-radius: 5px; overflow: hidden;">
+                            <div style="background: ${stage.color}; height: 100%; width: ${stage.progress}%; transition: width 0.5s;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('funnel').innerHTML = html;
+        }
+
         async function loadWorkspaceData() {
             try {
                 document.getElementById('lastUpdate').textContent = 'Loading...';
@@ -436,6 +496,7 @@
                 renderDepartments(workspaceData);
                 renderFiles(workspaceData);
                 renderActivity(workspaceData);
+                renderFunnel(workspaceData);
                 
                 document.getElementById('lastUpdate').textContent = 
                     'Last updated: ' + formatDate(workspaceData.timestamp);
