@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Launch Dashboard - NEW VERSION</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1); 
+            color: white; margin: 0; padding: 20px;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .login { 
+            background: rgba(0,0,0,0.8); padding: 40px; border-radius: 15px; 
+            text-align: center; max-width: 450px; width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        h1 { color: #ff6b6b; font-size: 2.5em; margin-bottom: 10px; }
+        h2 { color: #4ecdc4; margin-bottom: 30px; }
+        input { 
+            padding: 15px; margin: 10px 0; width: 100%; font-size: 18px; 
+            border: none; border-radius: 8px; box-sizing: border-box;
+            background: white; color: black;
+        }
+        button { 
+            padding: 15px 30px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); 
+            color: white; border: none; border-radius: 8px; font-size: 18px; 
+            cursor: pointer; width: 100%; margin: 15px 0; font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        .credentials { 
+            background: rgba(255,255,255,0.1); padding: 15px; margin: 20px 0; 
+            border-radius: 8px; font-size: 14px;
+        }
+        .message { margin: 15px 0; font-weight: bold; }
+        .success { color: #51cf66; }
+        .error { color: #ff6b6b; }
+        .debug { 
+            background: rgba(255,255,255,0.05); padding: 10px; margin: 15px 0; 
+            border-radius: 5px; font-size: 12px; text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h1>🚀 NEW VERSION</h1>
+        <h2>The Testosterone Protocol</h2>
+        <h3>Launch Dashboard</h3>
+        
+        <div class="credentials">
+            <strong>✅ LOGIN CREDENTIALS:</strong><br><br>
+            <strong>Username:</strong> teis<br>
+            <strong>Password:</strong> launch2026<br><br>
+            <strong>OR Admin:</strong> admin / testosterone2026
+        </div>
+        
+        <input type="text" id="user" placeholder="Username" value="teis" style="font-weight: bold;">
+        <input type="password" id="pass" placeholder="Password" value="launch2026" style="font-weight: bold;">
+        <button onclick="login()">🚀 LOGIN TO DASHBOARD</button>
+        
+        <div id="message" class="message"></div>
+        
+        <div id="debug" class="debug">
+            <strong>🐛 DEBUG INFO:</strong><br>
+            Page loaded successfully!<br>
+            Pre-filled with working credentials.<br>
+            Ready to login...
+        </div>
+    </div>
+
+    <script>
+        function addDebug(msg) {
+            const debug = document.getElementById('debug');
+            debug.innerHTML += '<br>' + msg;
+        }
+        
+        function login() {
+            addDebug('🟡 Login button clicked!');
+            
+            const username = document.getElementById('user').value.toLowerCase().trim();
+            const password = document.getElementById('pass').value;
+            const msgDiv = document.getElementById('message');
+            
+            addDebug('📝 Username entered: "' + username + '"');
+            addDebug('🔑 Password length: ' + password.length + ' characters');
+            
+            // Valid credentials
+            const logins = {
+                'teis': 'launch2026',
+                'admin': 'testosterone2026',
+                'guest': 'preview123'
+            };
+            
+            if (logins[username] === password) {
+                addDebug('✅ CREDENTIALS MATCH!');
+                msgDiv.innerHTML = '<div class="success">✅ LOGIN SUCCESSFUL!</div>';
+                
+                // Store session
+                sessionStorage.setItem('authenticated', 'true');
+                sessionStorage.setItem('username', username);
+                sessionStorage.setItem('loginTime', Date.now());
+                
+                addDebug('💾 Session data stored');
+                addDebug('🔄 Redirecting to dashboard in 3 seconds...');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 3000);
+                
+            } else {
+                addDebug('❌ CREDENTIALS DO NOT MATCH');
+                addDebug('Expected for "' + username + '": ' + (logins[username] || 'USER NOT FOUND'));
+                msgDiv.innerHTML = '<div class="error">❌ Login failed. Check credentials above.</div>';
+            }
+        }
+        
+        // Auto-trigger login for testing
+        addDebug('🎯 Form pre-filled for instant testing');
+        
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
