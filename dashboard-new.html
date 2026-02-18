@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth Dashboard - Launch Operations Reality Check</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-primary: #111111;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #242424;
+            --bg-hover: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --text-dim: #666666;
+            --accent-primary: #3b82f6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --accent-purple: #8b5cf6;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .nav-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .main-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .truth-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+            border: 2px solid var(--accent-danger);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .truth-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-danger);
+            margin-bottom: 1rem;
+        }
+
+        .truth-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .truth-stat {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .truth-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .truth-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .truth-value.danger {
+            color: var(--accent-danger);
+        }
+
+        .truth-value.warning {
+            color: var(--accent-warning);
+        }
+
+        .truth-value.success {
+            color: var(--accent-success);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-browser {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .file-tree {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .folder {
+            margin-bottom: 0.5rem;
+        }
+
+        .folder-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .folder-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .folder-icon {
+            color: var(--accent-warning);
+            width: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .file-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .file-icon {
+            color: var(--accent-primary);
+            width: 16px;
+        }
+
+        .file-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-meta {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .activity-tracker {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .activity-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            min-width: 120px;
+        }
+
+        .activity-agent {
+            font-weight: 600;
+            color: var(--accent-primary);
+            min-width: 150px;
+        }
+
+        .activity-action {
+            flex: 1;
+        }
+
+        .activity-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-success);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-danger);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-warning);
+        }
+
+        .learning-center {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .mistake-item {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mistake-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .mistake-title {
+            font-weight: 600;
+            color: var(--accent-danger);
+        }
+
+        .mistake-time {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .mistake-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .mistake-correction {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 4px;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .process-pipeline {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .pipeline-stages {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .pipeline-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-width: 150px;
+        }
+
+        .pipeline-stage:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -50px;
+            width: 100px;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .stage-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .stage-icon.completed {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .stage-icon.planned {
+            background: var(--bg-hover);
+            border: 2px dashed var(--border-color);
+            color: var(--text-dim);
+        }
+
+        .stage-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .stage-status {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--accent-success);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-success);
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .truth-title {
+                font-size: 1.75rem;
+            }
+            
+            .pipeline-stages {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .pipeline-stage:not(:last-child)::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // Mock data - In a real app, this would come from an API
+        const mockFiles = {
+            'content-boss': {
+                files: [
+                    { name: 'chapter-summaries.md', size: '12.4 KB', date: '2024-02-17', type: 'document' },
+                    { name: 'back-cover-copy.md', size: '2.1 KB', date: '2024-02-17', type: 'document' },
+                    { name: 'testosterone-protocol-outline.md', size: '8.7 KB', date: '2024-02-17', type: 'document' },
+                    { name: 'key-takeaways.md', size: '5.3 KB', date: '2024-02-17', type: 'document' },
+                    { name: 'sample-introduction.md', size: '6.9 KB', date: '2024-02-17', type: 'document' },
+                ]
+            },
+            'design-boss': {
+                files: [
+                    { name: 'testosterone-book-cover-research-report.md', size: '45.2 KB', date: '2024-02-17', type: 'report' },
+                    { name: '90-day-validation-page.html', size: '32.1 KB', date: '2024-02-17', type: 'webpage' },
+                    { name: 'executive-validation-page.html', size: '28.7 KB', date: '2024-02-17', type: 'webpage' },
+                    { name: 'master-t-validation-page.html', size: '30.4 KB', date: '2024-02-17', type: 'webpage' },
+                    { name: 'reboot-validation-page.html', size: '29.8 KB', date: '2024-02-17', type: 'webpage' },
+                ]
+            },
+            'launch-boss': {
+                files: [
+                    { name: 'launch-readiness-report.pdf', size: '156.3 KB', date: '2024-02-17', type: 'report' },
+                    { name: 'blocker-analysis.md', size: '8.2 KB', date: '2024-02-17', type: 'document' },
+                ]
+            }
+        };
+
+        const mockActivities = [
+            {
+                id: 1,
+                time: '2024-02-17 18:45',
+                agent: 'LAUNCH-BOSS',
+                action: 'Generated launch readiness report',
+                status: 'success',
+                details: 'Identified 3 critical blockers: SSL certificates, legal review, support scripts'
+            },
+            {
+                id: 2,
+                time: '2024-02-17 17:30',
+                agent: 'DESIGN-BOSS',
+                action: 'Created validation pages',
+                status: 'success',
+                details: '4 variants created for A/B testing'
+            },
+            {
+                id: 3,
+                time: '2024-02-17 16:15',
+                agent: 'CONTENT-BOSS',
+                action: 'Generated book content',
+                status: 'success',
+                details: '5 key documents created including chapter summaries'
+            },
+            {
+                id: 4,
+                time: '2024-02-17 15:00',
+                agent: 'WEBSITE-BOSS',
+                action: 'Attempted site deployment',
+                status: 'error',
+                details: 'Failed: No deployment credentials configured'
+            },
+            {
+                id: 5,
+                time: '2024-02-17 14:30',
+                agent: 'REVENUE-BOSS',
+                action: 'Revenue projection analysis',
+                status: 'pending',
+                details: 'Projected $48.5K but no actual sales infrastructure'
+            }
+        ];
+
+        const mockMistakes = [
+            {
+                id: 1,
+                title: 'Claimed "Sites Launched" Without Deployment',
+                time: '2024-02-17',
+                description: 'Multiple agents reported successful launches but sites were only created locally, not deployed to any live servers.',
+                correction: 'Implement deployment verification checks. Require proof of live URL before marking as "launched".',
+                agent: 'WEBSITE-BOSS'
+            },
+            {
+                id: 2,
+                title: 'Revenue Projections Without Payment System',
+                time: '2024-02-17',
+                description: 'Revenue projections of $48.5K made without any payment processing, checkout flow, or e-commerce infrastructure.',
+                correction: 'Build payment infrastructure first. Integrate Stripe/PayPal before making revenue claims.',
+                agent: 'REVENUE-BOSS'
+            },
+            {
+                id: 3,
+                title: 'Missing SSL Certificates',
+                time: '2024-02-17',
+                description: 'Validation pages created without HTTPS support, making them unsuitable for collecting user data.',
+                correction: 'Set up SSL certificates through Vercel/Netlify or use CloudFlare for automatic HTTPS.',
+                agent: 'DESIGN-BOSS'
+            },
+            {
+                id: 4,
+                title: 'No Legal Compliance',
+                time: '2024-02-17',
+                description: 'Health claims made without disclaimers, privacy policy, or terms of service.',
+                correction: 'Add legal pages, FDA disclaimers for health content, and ensure GDPR compliance.',
+                agent: 'LAUNCH-BOSS'
+            }
+        ];
+
+        const DashboardApp = () => {
+            const [activeTab, setActiveTab] = useState('truth');
+            const [selectedFolder, setSelectedFolder] = useState(null);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [activityFilter, setActivityFilter] = useState('all');
+
+            const filteredActivities = useMemo(() => {
+                return mockActivities.filter(activity => {
+                    const matchesSearch = activity.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        activity.agent.toLowerCase().includes(searchTerm.toLowerCase());
+                    const matchesFilter = activityFilter === 'all' || activity.status === activityFilter;
+                    return matchesSearch && matchesFilter;
+                });
+            }, [searchTerm, activityFilter]);
+
+            const TruthDashboard = () => (
+                <div className="truth-banner">
+                    <h1 className="truth-title">⚠️ REALITY CHECK DASHBOARD ⚠️</h1>
+                    <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
+                        The unfiltered truth about our launch status
+                    </p>
+                    <div className="truth-grid">
+                        <div className="truth-stat">
+                            <div className="truth-label">Planning Status</div>
+                            <div className="truth-value success">100% ✅</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">Execution Status</div>
+                            <div className="truth-value danger">0% ❌</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">Sites Actually Live</div>
+                            <div className="truth-value danger">0 of 4</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">Revenue (Projected)</div>
+                            <div className="truth-value warning">$48.5K</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">Revenue (Actual)</div>
+                            <div className="truth-value danger">$0</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">Payment System</div>
+                            <div className="truth-value danger">None ❌</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">SSL Certificates</div>
+                            <div className="truth-value danger">Missing ❌</div>
+                        </div>
+                        <div className="truth-stat">
+                            <div className="truth-label">Legal Compliance</div>
+                            <div className="truth-value danger">None ❌</div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const FileExplorer = () => (
+                <div className="file-browser">
+                    <h2 className="section-title">
+                        <i className="fas fa-folder-tree"></i>
+                        File Access System
+                    </h2>
+                    <div className="file-tree">
+                        {Object.entries(mockFiles).map(([dept, data]) => (
+                            <div key={dept} className="folder">
+                                <div
+                                    className="folder-header"
+                                    onClick={() => setSelectedFolder(selectedFolder === dept ? null : dept)}
+                                >
+                                    <i className={`fas ${selectedFolder === dept ? 'fa-folder-open' : 'fa-folder'} folder-icon`}></i>
+                                    <span>{dept}</span>
+                                    <span style={{ marginLeft: 'auto', color: 'var(--text-dim)', fontSize: '0.875rem' }}>
+                                        {data.files.length} files
+                                    </span>
+                                </div>
+                                {selectedFolder === dept && (
+                                    <div className="folder-contents">
+                                        {data.files.map((file, idx) => (
+                                            <div key={idx} className="file-item">
+                                                <i className="fas fa-file file-icon"></i>
+                                                <div className="file-info">
+                                                    <span>{file.name}</span>
+                                                    <span className="file-meta">
+                                                        {file.size} • {file.date}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const ActivityTracker = () => (
+                <div className="activity-tracker">
+                    <h2 className="section-title">
+                        <i className="fas fa-history"></i>
+                        Agent Activity Tracker
+                        <span className="live-indicator">
+                            <span className="live-dot"></span>
+                            Real-time
+                        </span>
+                    </h2>
+                    <div className="filter-bar">
+                        <input
+                            type="text"
+                            className="filter-input"
+                            placeholder="Search activities..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <select
+                            className="filter-select"
+                            value={activityFilter}
+                            onChange={(e) => setActivityFilter(e.target.value)}
+                        >
+                            <option value="all">All Status</option>
+                            <option value="success">Success</option>
+                            <option value="error">Errors</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div className="activity-list">
+                        {filteredActivities.map(activity => (
+                            <div key={activity.id} className="activity-item">
+                                <div className="activity-time">{activity.time}</div>
+                                <div className="activity-agent">{activity.agent}</div>
+                                <div className="activity-action">
+                                    <div>{activity.action}</div>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                                        {activity.details}
+                                    </div>
+                                </div>
+                                <div className={`activity-status status-${activity.status}`}>
+                                    {activity.status}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const LearningCenter = () => (
+                <div className="learning-center">
+                    <h2 className="section-title">
+                        <i className="fas fa-graduation-cap"></i>
+                        Learning Center - Mistakes & Corrections
+                    </h2>
+                    {mockMistakes.map(mistake => (
+                        <div key={mistake.id} className="mistake-item">
+                            <div className="mistake-header">
+                                <div className="mistake-title">{mistake.title}</div>
+                                <div className="mistake-time">{mistake.time}</div>
+                            </div>
+                            <div className="mistake-description">{mistake.description}</div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
+                                Agent: {mistake.agent}
+                            </div>
+                            <div className="mistake-correction">
+                                <strong>✅ Correction:</strong> {mistake.correction}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+
+            const ProcessPipeline = () => (
+                <div className="process-pipeline">
+                    <h2 className="section-title">
+                        <i className="fas fa-project-diagram"></i>
+                        Process Overview
+                    </h2>
+                    <div className="pipeline-stages">
+                        <div className="pipeline-stage">
+                            <div className="stage-icon completed">
+                                <i className="fas fa-search"></i>
+                            </div>
+                            <div className="stage-name">Research</div>
+                            <div className="stage-status">✅ Complete</div>
+                        </div>
+                        <div className="pipeline-stage">
+                            <div className="stage-icon completed">
+                                <i className="fas fa-book"></i>
+                            </div>
+                            <div className="stage-name">Narratives</div>
+                            <div className="stage-status">✅ Complete</div>
+                        </div>
+                        <div className="pipeline-stage">
+                            <div className="stage-icon completed">
+                                <i className="fas fa-palette"></i>
+                            </div>
+                            <div className="stage-name">Creative</div>
+                            <div className="stage-status">✅ Complete</div>
+                        </div>
+                        <div className="pipeline-stage">
+                            <div className="stage-icon planned">
+                                <i className="fas fa-rocket"></i>
+                            </div>
+                            <div className="stage-name">Launch</div>
+                            <div className="stage-status">❌ Not Started</div>
+                        </div>
+                        <div className="pipeline-stage">
+                            <div className="stage-icon planned">
+                                <i className="fas fa-bullhorn"></i>
+                            </div>
+                            <div className="stage-name">Marketing</div>
+                            <div className="stage-status">❌ Not Started</div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const renderContent = () => {
+                switch (activeTab) {
+                    case 'truth':
+                        return (
+                            <>
+                                <TruthDashboard />
+                                <ProcessPipeline />
+                                <div className="stats-grid">
+                                    <div className="stat-card">
+                                        <div className="stat-icon">📊</div>
+                                        <div className="stat-label">Total Workspaces Created</div>
+                                        <div className="stat-value">58</div>
+                                        <div className="stat-change" style={{ color: 'var(--accent-warning)' }}>
+                                            Most inactive
+                                        </div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <div className="stat-icon">📁</div>
+                                        <div className="stat-label">Files Generated</div>
+                                        <div className="stat-value">23</div>
+                                        <div className="stat-change" style={{ color: 'var(--accent-success)' }}>
+                                            All stored locally
+                                        </div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <div className="stat-icon">🚨</div>
+                                        <div className="stat-label">Critical Blockers</div>
+                                        <div className="stat-value" style={{ color: 'var(--accent-danger)' }}>6</div>
+                                        <div className="stat-change" style={{ color: 'var(--accent-danger)' }}>
+                                            Blocking launch
+                                        </div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <div className="stat-icon">⏱️</div>
+                                        <div className="stat-label">Time Since Start</div>
+                                        <div className="stat-value">3 days</div>
+                                        <div className="stat-change" style={{ color: 'var(--text-secondary)' }}>
+                                            No revenue yet
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        );
+                    case 'files':
+                        return <FileExplorer />;
+                    case 'activity':
+                        return <ActivityTracker />;
+                    case 'learning':
+                        return <LearningCenter />;
+                    default:
+                        return null;
+                }
+            };
+
+            return (
+                <div className="dashboard-container">
+                    <header className="header">
+                        <div className="header-content">
+                            <div className="logo">
+                                <i className="fas fa-chart-line"></i>
+                                Truth Dashboard
+                            </div>
+                            <nav className="nav-tabs">
+                                <button
+                                    className={`nav-tab ${activeTab === 'truth' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('truth')}
+                                >
+                                    Truth Status
+                                </button>
+                                <button
+                                    className={`nav-tab ${activeTab === 'files' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('files')}
+                                >
+                                    File Access
+                                </button>
+                                <button
+                                    className={`nav-tab ${activeTab === 'activity' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('activity')}
+                                >
+                                    Activity Tracker
+                                </button>
+                                <button
+                                    className={`nav-tab ${activeTab === 'learning' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('learning')}
+                                >
+                                    Learning Center
+                                </button>
+                            </nav>
+                        </div>
+                    </header>
+                    <main className="main-content">
+                        {renderContent()}
+                    </main>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<DashboardApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>
