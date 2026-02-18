@@ -4,7 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Launch Dashboard - Access</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; color: #ffffff; 
+            background: linear-gradient(135deg, #0a0e1a 0%, #1e3a8a 50%, #dc2626 100%);
+        }
+        .login-container { width: 100%; max-width: 400px; padding: 20px; }
+        .login-card { 
+            background: rgba(30, 41, 59, 0.95); border-radius: 12px; padding: 40px; 
+            backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .logo h1 { 
+            font-size: 28px; margin-bottom: 8px;
+            background: linear-gradient(135deg, #60a5fa, #dc2626);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo p { color: #94a3b8; font-size: 16px; }
+        .login-form { margin-bottom: 20px; }
+        .input-group { margin-bottom: 20px; }
+        input { 
+            width: 100%; padding: 14px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+            background: rgba(15, 23, 42, 0.8); color: white; font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        input:focus { 
+            outline: none; border-color: #3b82f6; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .btn-primary { 
+            width: 100%; padding: 14px; 
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white; border: none; border-radius: 8px; 
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover { 
+            transform: translateY(-1px); 
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        .error { 
+            padding: 12px; background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 8px;
+            color: #fecaca; text-align: center; margin-top: 15px;
+        }
+        .hidden { display: none; }
+        .login-footer { 
+            text-align: center; margin-top: 30px; 
+            color: #64748b; font-size: 14px;
+        }
+        .credentials { 
+            background: rgba(59, 130, 246, 0.1); padding: 10px; 
+            border-radius: 6px; margin-top: 10px; font-size: 12px;
+        }
+    </style>
 </head>
 <body class="login-page">
     <div class="login-container">
@@ -16,7 +75,7 @@
             
             <form id="loginForm" class="login-form">
                 <div class="input-group">
-                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="text" id="username" placeholder="Username" required autofocus>
                 </div>
                 <div class="input-group">
                     <input type="password" id="password" placeholder="Password" required>
@@ -28,10 +87,118 @@
             
             <div class="login-footer">
                 <p>🔐 Secure access to project intelligence</p>
+                <div class="credentials">
+                    <strong>Login:</strong> teis / launch2026<br>
+                    <strong>Admin:</strong> admin / testosterone2026<br>
+                    <strong>Guest:</strong> guest / preview123
+                </div>
             </div>
         </div>
     </div>
     
-    <script src="js/auth.js"></script>
+    <script>
+        // Authentication System
+        class AuthSystem {
+            constructor() {
+                this.credentials = {
+                    'teis': 'launch2026',
+                    'admin': 'testosterone2026',
+                    'guest': 'preview123'
+                };
+                this.init();
+            }
+
+            init() {
+                // Check if already authenticated
+                if (this.isAuthenticated()) {
+                    this.redirectToDashboard();
+                    return;
+                }
+
+                // Set up login form
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                }
+
+                // Handle enter key
+                document.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const form = document.getElementById('loginForm');
+                        if (form) this.handleLogin(e);
+                    }
+                });
+            }
+
+            handleLogin(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.toLowerCase().trim();
+                const password = document.getElementById('password').value;
+
+                // Clear previous errors
+                this.hideError();
+
+                // Validate credentials
+                if (this.validateCredentials(username, password)) {
+                    // Store session
+                    sessionStorage.setItem('authenticated', 'true');
+                    sessionStorage.setItem('username', username);
+                    sessionStorage.setItem('loginTime', Date.now());
+                    
+                    // Redirect to dashboard
+                    this.redirectToDashboard();
+                } else {
+                    this.showError('Invalid username or password. Check the credentials below.');
+                }
+            }
+
+            validateCredentials(username, password) {
+                return this.credentials[username] === password;
+            }
+
+            isAuthenticated() {
+                const authenticated = sessionStorage.getItem('authenticated');
+                const loginTime = sessionStorage.getItem('loginTime');
+                
+                // Check if session expired (24 hours)
+                if (loginTime && (Date.now() - parseInt(loginTime)) > 24 * 60 * 60 * 1000) {
+                    this.logout();
+                    return false;
+                }
+                
+                return authenticated === 'true';
+            }
+
+            redirectToDashboard() {
+                window.location.href = 'dashboard.html';
+            }
+
+            logout() {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.classList.remove('hidden');
+                }
+            }
+
+            hideError() {
+                const errorDiv = document.getElementById('error-message');
+                if (errorDiv) {
+                    errorDiv.classList.add('hidden');
+                }
+            }
+        }
+
+        // Initialize authentication system
+        const auth = new AuthSystem();
+        window.auth = auth;
+    </script>
 </body>
 </html>
