@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Center</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="terminal-header">
+        <div class="terminal-title">COMMAND CENTER</div>
+        <div class="last-updated">Last Updated: <span id="lastUpdated">--</span></div>
+    </div>
+
+    <div class="grid-container">
+        <!-- Department Overview -->
+        <section class="panel department-overview">
+            <h2 class="section-title">
+                <span class="icon">▸</span> DEPARTMENT STATUS
+            </h2>
+            <div id="departmentGrid" class="department-grid">
+                <!-- Departments will be injected here -->
+            </div>
+        </section>
+
+        <!-- Funnel Overview -->
+        <section class="panel funnel-overview">
+            <h2 class="section-title">
+                <span class="icon">◆</span> FUNNEL PIPELINE
+            </h2>
+            <div id="funnelVisualization" class="funnel-container">
+                <!-- Funnel stages will be injected here -->
+            </div>
+        </section>
+
+        <!-- File System Browser -->
+        <section class="panel file-browser">
+            <h2 class="section-title">
+                <span class="icon">▾</span> FILE SYSTEM
+            </h2>
+            <div class="file-browser-container">
+                <div id="fileBreadcrumb" class="breadcrumb"></div>
+                <div id="fileList" class="file-list">
+                    <!-- Files will be injected here -->
+                </div>
+                <div id="filePreview" class="file-preview hidden">
+                    <!-- Markdown preview will be rendered here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Failures & Mistakes Log -->
+        <section class="panel failures-log">
+            <h2 class="section-title">
+                <span class="icon">⚠</span> FAILURES & MISTAKES LOG
+            </h2>
+            <div id="failuresContainer" class="failures-container">
+                <!-- Failures will be injected here -->
+            </div>
+        </section>
+    </div>
+
+    <script src="dashboard.js"></script>
+    <script src="dashboard-api.js"></script>
+</body>
+</html>
