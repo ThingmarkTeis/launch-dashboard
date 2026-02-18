@@ -5,200 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Launch Dashboard - Access</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui; 
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; color: #ffffff; 
-            background: linear-gradient(135deg, #0a0e1a 0%, #1e3a8a 50%, #dc2626 100%);
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(45deg, #1e3a8a, #dc2626); 
+            color: white; margin: 0; padding: 20px;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
         }
-        .login-container { width: 100%; max-width: 400px; padding: 20px; }
-        .login-card { 
-            background: rgba(30, 41, 59, 0.95); border-radius: 12px; padding: 40px; 
-            backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .login { 
+            background: rgba(0,0,0,0.8); padding: 40px; border-radius: 10px; 
+            text-align: center; max-width: 400px; width: 100%;
         }
-        .logo { text-align: center; margin-bottom: 30px; }
-        .logo h1 { 
-            font-size: 28px; margin-bottom: 8px;
-            background: linear-gradient(135deg, #60a5fa, #dc2626);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .logo p { color: #94a3b8; font-size: 16px; }
-        .login-form { margin-bottom: 20px; }
-        .input-group { margin-bottom: 20px; }
         input { 
-            width: 100%; padding: 14px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
-            background: rgba(15, 23, 42, 0.8); color: white; font-size: 16px;
-            transition: all 0.3s ease;
+            padding: 15px; margin: 10px 0; width: 100%; font-size: 16px; 
+            border: none; border-radius: 5px; box-sizing: border-box;
         }
-        input:focus { 
-            outline: none; border-color: #3b82f6; 
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        button { 
+            padding: 15px 30px; background: #3b82f6; color: white; 
+            border: none; border-radius: 5px; font-size: 16px; 
+            cursor: pointer; width: 100%; margin: 10px 0;
         }
-        .btn-primary { 
-            width: 100%; padding: 14px; 
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: white; border: none; border-radius: 8px; 
-            font-size: 16px; font-weight: 600; cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover { 
-            transform: translateY(-1px); 
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-        .error { 
-            padding: 12px; background: rgba(220, 38, 38, 0.2);
-            border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 8px;
-            color: #fecaca; text-align: center; margin-top: 15px;
-        }
-        .hidden { display: none; }
-        .login-footer { 
-            text-align: center; margin-top: 30px; 
-            color: #64748b; font-size: 14px;
-        }
-        .credentials { 
-            background: rgba(59, 130, 246, 0.1); padding: 10px; 
-            border-radius: 6px; margin-top: 10px; font-size: 12px;
-        }
+        button:hover { background: #1d4ed8; }
+        .error { color: #ff6b6b; margin: 10px 0; }
+        .success { color: #51cf66; margin: 10px 0; }
+        .debug { background: rgba(255,255,255,0.1); padding: 10px; margin: 10px 0; font-size: 12px; }
     </style>
 </head>
-<body class="login-page">
-    <div class="login-container">
-        <div class="login-card">
-            <div class="logo">
-                <h1>🚀 Launch Command</h1>
-                <p>The Testosterone Protocol</p>
-            </div>
-            
-            <form id="loginForm" class="login-form">
-                <div class="input-group">
-                    <input type="text" id="username" placeholder="Username" required autofocus>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password" placeholder="Password" required>
-                </div>
-                <button type="submit" class="btn-primary">Access Dashboard</button>
-            </form>
-            
-            <div id="error-message" class="error hidden"></div>
-            
-            <div class="login-footer">
-                <p>🔐 Secure access to project intelligence</p>
-                <div class="credentials">
-                    <strong>Login:</strong> teis / launch2026<br>
-                    <strong>Admin:</strong> admin / testosterone2026<br>
-                    <strong>Guest:</strong> guest / preview123
-                </div>
-            </div>
+<body>
+    <div class="login">
+        <h1>🚀 The Testosterone Protocol</h1>
+        <h2>Launch Dashboard</h2>
+        
+        <div class="debug">
+            <strong>Valid Credentials:</strong><br>
+            teis / launch2026<br>
+            admin / testosterone2026<br>
+            guest / preview123
+        </div>
+        
+        <input type="text" id="user" placeholder="Username" value="teis">
+        <input type="password" id="pass" placeholder="Password" value="launch2026">
+        <button onclick="login()">LOGIN</button>
+        
+        <div id="message"></div>
+        
+        <div class="debug">
+            <strong>Debug Info:</strong><br>
+            <div id="debug"></div>
         </div>
     </div>
-    
+
     <script>
-        // Authentication System
-        class AuthSystem {
-            constructor() {
-                this.credentials = {
-                    'teis': 'launch2026',
-                    'admin': 'testosterone2026',
-                    'guest': 'preview123'
-                };
-                this.init();
-            }
-
-            init() {
-                // Check if already authenticated
-                if (this.isAuthenticated()) {
-                    this.redirectToDashboard();
-                    return;
-                }
-
-                // Set up login form
-                const loginForm = document.getElementById('loginForm');
-                if (loginForm) {
-                    loginForm.addEventListener('submit', (e) => this.handleLogin(e));
-                }
-
-                // Handle enter key
-                document.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const form = document.getElementById('loginForm');
-                        if (form) this.handleLogin(e);
-                    }
-                });
-            }
-
-            handleLogin(e) {
-                e.preventDefault();
+        function debug(msg) {
+            document.getElementById('debug').innerHTML += msg + '<br>';
+        }
+        
+        function login() {
+            debug('Login attempt started...');
+            
+            const username = document.getElementById('user').value.toLowerCase().trim();
+            const password = document.getElementById('pass').value;
+            const msgDiv = document.getElementById('message');
+            
+            debug('Username: "' + username + '"');
+            debug('Password length: ' + password.length);
+            
+            // Clear message
+            msgDiv.innerHTML = '';
+            
+            // Simple credential check
+            const validLogins = {
+                'teis': 'launch2026',
+                'admin': 'testosterone2026',
+                'guest': 'preview123'
+            };
+            
+            if (validLogins[username] && validLogins[username] === password) {
+                debug('✅ Credentials valid!');
+                msgDiv.innerHTML = '<div class="success">✅ Login successful! Redirecting...</div>';
                 
-                const username = document.getElementById('username').value.toLowerCase().trim();
-                const password = document.getElementById('password').value;
-
-                // Clear previous errors
-                this.hideError();
-
-                // Validate credentials
-                if (this.validateCredentials(username, password)) {
-                    // Store session
-                    sessionStorage.setItem('authenticated', 'true');
-                    sessionStorage.setItem('username', username);
-                    sessionStorage.setItem('loginTime', Date.now());
-                    
-                    // Redirect to dashboard
-                    this.redirectToDashboard();
-                } else {
-                    this.showError('Invalid username or password. Check the credentials below.');
-                }
-            }
-
-            validateCredentials(username, password) {
-                return this.credentials[username] === password;
-            }
-
-            isAuthenticated() {
-                const authenticated = sessionStorage.getItem('authenticated');
-                const loginTime = sessionStorage.getItem('loginTime');
+                // Store login
+                sessionStorage.setItem('loggedIn', 'true');
+                sessionStorage.setItem('user', username);
                 
-                // Check if session expired (24 hours)
-                if (loginTime && (Date.now() - parseInt(loginTime)) > 24 * 60 * 60 * 1000) {
-                    this.logout();
-                    return false;
-                }
+                debug('Session stored. Redirecting in 2 seconds...');
                 
-                return authenticated === 'true';
-            }
-
-            redirectToDashboard() {
-                window.location.href = 'dashboard.html';
-            }
-
-            logout() {
-                sessionStorage.clear();
-                window.location.href = 'index.html';
-            }
-
-            showError(message) {
-                const errorDiv = document.getElementById('error-message');
-                if (errorDiv) {
-                    errorDiv.textContent = message;
-                    errorDiv.classList.remove('hidden');
-                }
-            }
-
-            hideError() {
-                const errorDiv = document.getElementById('error-message');
-                if (errorDiv) {
-                    errorDiv.classList.add('hidden');
-                }
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                
+            } else {
+                debug('❌ Credentials invalid');
+                msgDiv.innerHTML = '<div class="error">❌ Invalid login. Try: teis / launch2026</div>';
             }
         }
-
-        // Initialize authentication system
-        const auth = new AuthSystem();
-        window.auth = auth;
+        
+        // Auto-fill for testing
+        debug('Page loaded. Auto-filled teis/launch2026 for testing.');
+        
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
     </script>
 </body>
 </html>
