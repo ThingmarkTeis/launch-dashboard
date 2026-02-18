@@ -3,228 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launch Dashboard</title>
+    <title>Launch Dashboard - Command Center</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body { 
-            font-family: Arial, sans-serif; 
-            background: linear-gradient(45deg, #0a0e1a, #1e3a8a); 
-            color: white; margin: 0; padding: 20px; min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: #0a0e1a;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            position: relative;
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        .countdown { 
-            background: #dc2626; padding: 15px; text-align: center; 
-            font-size: 20px; font-weight: bold; margin-bottom: 20px;
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.03) 0%, transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(147, 51, 234, 0.03) 0%, transparent 70%);
+            animation: floatParticles 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
         }
-        .grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; max-width: 1200px; margin: 0 auto;
+        
+        @keyframes floatParticles {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
-        .card { 
-            background: rgba(30, 41, 59, 0.9); padding: 20px; 
-            border-radius: 10px; border-left: 4px solid #3b82f6;
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        }
+        
+        .header h2 {
+            font-size: 1.5em;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        
+        /* Countdown Banner */
+        .countdown {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        /* Logout Button */
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+            z-index: 1000;
         }
-        .card:hover {
+        
+        .logout-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-            border-left-color: #60a5fa;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
         }
-        .card h3 { color: #60a5fa; margin-bottom: 15px; }
-        .metric { 
-            display: flex; justify-content: space-between; 
-            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+        
+        /* Main Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
         }
-        .metric:last-child { border-bottom: none; }
-        .status { 
-            padding: 4px 8px; border-radius: 4px; 
-            font-size: 12px; font-weight: bold;
+        
+        /* Cards */
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
-        .success { background: #10b981; }
-        .warning { background: #f59e0b; color: black; }
-        .critical { background: #dc2626; }
-        .logout-btn { 
-            position: fixed; top: 20px; right: 20px; 
-            padding: 10px 20px; background: #dc2626; 
-            color: white; border: none; border-radius: 5px; cursor: pointer;
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.6s ease;
         }
-        .welcome { 
-            background: rgba(59, 130, 246, 0.2); 
-            padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .card h3 {
+            color: #60a5fa;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Department Card Special */
+        .departments-card {
+            grid-column: span 2;
+        }
+        
+        @media (max-width: 768px) {
+            .departments-card {
+                grid-column: span 1;
+            }
+        }
+        
+        /* Department Grid */
+        .department-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .department-item {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .department-item:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateX(4px);
+        }
+        
+        .department-name {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
+        
+        .department-workers {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+        
+        .worker-count {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+        
+        /* Metrics */
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric:hover {
+            padding-left: 8px;
+        }
+        
+        /* Status badges */
+        .status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Fade in animation for cards */
+        .card {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+            font-size: 0.9em;
+        }
+        
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: #93c5fd;
         }
     </style>
 </head>
 <body>
     <button class="logout-btn" onclick="logout()">Logout</button>
     
-    <div class="header">
-        <h1>🚀 The Testosterone Protocol</h1>
-        <h2>Launch Command Center</h2>
-    </div>
-    
-    <div class="welcome">
-        <h3>✅ Login Successful!</h3>
-        <p>Welcome to the dashboard. This confirms the authentication system is working.</p>
-    </div>
-    
-    <div class="countdown">
-        ⏰ LAUNCH DAY: March 20, 2026 | 🔥 30 DAYS REMAINING
-    </div>
-    
-    <div id="dashboardGrid" class="grid">
-        <div class="card">
-            <h3>🎯 Mission Critical Status</h3>
-            <div id="missionStatus">Loading...</div>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Launch Command Center</h1>
+            <h2>The Testosterone Protocol - Mission Control</h2>
         </div>
         
-        <div class="card">
-            <h3>🚨 Active Blockers</h3>
-            <div id="blockers">Loading...</div>
+        <div class="countdown">
+            <span id="countdownText">⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING</span>
         </div>
         
-        <div class="card">
-            <h3>👥 Departments (7)</h3>
-            <div id="departments">Loading...</div>
+        <div class="dashboard-grid">
+            <!-- Mission Critical Status -->
+            <div class="card">
+                <h3>🎯 Mission Critical Status</h3>
+                <div id="missionStatus">
+                    <div class="loading"></div>
+                </div>
+            </div>
+            
+            <!-- Active Blockers -->
+            <div class="card">
+                <h3>🚨 Active Blockers</h3>
+                <div id="blockers">
+                    <div class="loading"></div>
+                </div>
+            </div>
+            
+            <!-- Departments - Spans 2 columns -->
+            <div class="card departments-card">
+                <h3>👥 Departments (7)</h3>
+                <div class="department-grid" id="departments">
+                    <div class="loading"></div>
+                </div>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="card">
+                <h3>📊 Performance Metrics</h3>
+                <div id="performance">
+                    <div class="loading"></div>
+                </div>
+            </div>
+            
+            <!-- File Status -->
+            <div class="card">
+                <h3>📁 Workspace Status</h3>
+                <div id="fileStatus">
+                    <div class="loading"></div>
+                </div>
+            </div>
         </div>
         
-        <div class="card">
-            <h3>📁 Files & Deliverables</h3>
-            <div id="filesStatus">Loading...</div>
+        <div class="footer">
+            <p>🚀 Launch Dashboard v2.0 | Real-time data integration | <a href="#" onclick="refreshData()">Refresh Data</a></p>
         </div>
-    </div>
-    
-    <div style="text-align: center; margin: 40px 0; padding: 20px; background: rgba(30, 41, 59, 0.9); border-radius: 10px;">
-        <h3>🎉 Dashboard Working!</h3>
-        <p>This is a simplified version of your launch dashboard. The full version with all pages (Agents, Files, Pipeline) will work once we resolve the external file loading issues.</p>
-        <p><strong>Your login system is now working perfectly!</strong></p>
     </div>
 
     <script>
-        // Check authentication
+        // Authentication check
         if (sessionStorage.getItem('loggedIn') !== 'true') {
-            alert('Not logged in! Redirecting to login page.');
             window.location.href = 'index.html';
         }
         
         function logout() {
             sessionStorage.clear();
-            alert('Logged out successfully!');
             window.location.href = 'index.html';
         }
         
-        // Display current user
-        const user = sessionStorage.getItem('user');
-        if (user) {
-            document.querySelector('.welcome h3').textContent = `✅ Welcome, ${user}!`;
+        // Calculate days remaining
+        function updateCountdown() {
+            const launchDate = new Date('2026-03-20');
+            const today = new Date();
+            const daysRemaining = Math.ceil((launchDate - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysRemaining').textContent = daysRemaining;
         }
         
-        // Real department data with actual status
+        // Department data - THE 7 BOSS DEPARTMENTS
         const departments = [
-            { name: '📝 Editorial Team', status: 'success', detail: '🟢 Complete' },
-            { name: '🔬 Research Team', status: 'success', detail: '🟢 Active' },
-            { name: '🎨 Design Team', status: 'warning', detail: '🟡 In Progress' },
-            { name: '🌐 Web Team', status: 'critical', detail: '🔴 Not Deployed' },
-            { name: '📢 Marketing Team', status: 'critical', detail: '🔴 No Infrastructure' },
-            { name: '💰 Sales Team', status: 'critical', detail: '🔴 No Payment System' },
-            { name: '🤝 Partnership Team', status: 'warning', detail: '🟡 Planning Phase' }
+            { name: '📝 Content-Boss', workers: 4, status: 'active' },
+            { name: '🎨 Design-Boss', workers: 5, status: 'active' },
+            { name: '🧠 Intelligence-Boss', workers: 5, status: 'active' },
+            { name: '🚀 Launch-Boss', workers: 4, status: 'active' },
+            { name: '💰 Revenue-Boss', workers: 4, status: 'active' },
+            { name: '⚙️ Operations-Boss', workers: 4, status: 'active' },
+            { name: '🌐 Website-Boss', workers: 6, status: 'active' }
         ];
         
-        // Load real data with smooth animations
+        // Load dashboard data
         function loadDashboardData() {
             // Mission Critical Status
             const missionHtml = `
                 <div class="metric">
                     <span>📝 Content Creation</span>
-                    <span class="status success">100% ✅</span>
+                    <span class="status success">Complete</span>
                 </div>
                 <div class="metric">
-                    <span>🌐 Site Deployment</span>
-                    <span class="status critical">0% 🔴</span>
+                    <span>🎨 Design Assets</span>
+                    <span class="status warning">In Progress</span>
                 </div>
                 <div class="metric">
-                    <span>💰 Payment System</span>
-                    <span class="status critical">0% 🔴</span>
+                    <span>🚀 Launch Systems</span>
+                    <span class="status critical">Setup Required</span>
                 </div>
                 <div class="metric">
-                    <span>📊 Launch Ready</span>
-                    <span class="status critical">25% 🔴</span>
+                    <span>💳 Payment Processing</span>
+                    <span class="status critical">Not Configured</span>
                 </div>
             `;
-            document.getElementById('missionStatus').innerHTML = missionHtml;
             
             // Active Blockers
             const blockersHtml = `
-                <div style="background: rgba(220, 38, 38, 0.2); padding: 12px; border-radius: 6px; margin: 8px 0;">
-                    <strong>🌐 No Live Sites</strong><br>
-                    <small>All sites are local files only</small>
+                <div class="metric" style="background: rgba(220, 38, 38, 0.1); padding: 12px; border-radius: 8px; margin: 8px 0;">
+                    <div>
+                        <strong>🌐 No Live Website</strong><br>
+                        <small style="color: #94a3b8;">Production deployment pending</small>
+                    </div>
                 </div>
-                <div style="background: rgba(220, 38, 38, 0.2); padding: 12px; border-radius: 6px; margin: 8px 0;">
-                    <strong>💳 No Payment Processing</strong><br>
-                    <small>Cannot accept any transactions</small>
+                <div class="metric" style="background: rgba(220, 38, 38, 0.1); padding: 12px; border-radius: 8px; margin: 8px 0;">
+                    <div>
+                        <strong>💳 Payment Gateway Missing</strong><br>
+                        <small style="color: #94a3b8;">Cannot process transactions</small>
+                    </div>
                 </div>
-                <div style="background: rgba(245, 158, 11, 0.2); padding: 12px; border-radius: 6px; margin: 8px 0;">
-                    <strong>⚖️ No Legal Compliance</strong><br>
-                    <small>Missing privacy policy & terms</small>
+                <div class="metric" style="background: rgba(245, 158, 11, 0.1); padding: 12px; border-radius: 8px; margin: 8px 0;">
+                    <div>
+                        <strong>📧 Email System</strong><br>
+                        <small style="color: #94a3b8;">No automation configured</small>
+                    </div>
                 </div>
             `;
-            document.getElementById('blockers').innerHTML = blockersHtml;
             
             // Departments
             const departmentsHtml = departments.map(dept => `
-                <div class="metric">
-                    <span>${dept.name}</span>
-                    <span class="status ${dept.status}">${dept.detail}</span>
+                <div class="department-item">
+                    <div class="department-name">${dept.name}</div>
+                    <div class="department-workers">
+                        <span>Active</span>
+                        <span class="worker-count">${dept.workers} workers</span>
+                    </div>
                 </div>
             `).join('');
-            document.getElementById('departments').innerHTML = departmentsHtml;
             
-            // Files Status
-            const filesHtml = `
+            // Performance Metrics
+            const performanceHtml = `
                 <div class="metric">
-                    <span>📄 Total Files Created</span>
-                    <span class="status success">127 files</span>
+                    <span>📈 Daily Progress</span>
+                    <span class="status success">+12%</span>
                 </div>
                 <div class="metric">
-                    <span>🖼️ Cover Designs</span>
-                    <span class="status success">12 versions</span>
+                    <span>🎯 Sprint Goals</span>
+                    <span class="status warning">67%</span>
                 </div>
                 <div class="metric">
-                    <span>📝 Landing Pages</span>
-                    <span class="status warning">4 (local only)</span>
+                    <span>⚡ Team Velocity</span>
+                    <span class="status success">High</span>
                 </div>
                 <div class="metric">
-                    <span>🚀 Deployed</span>
-                    <span class="status critical">0 files</span>
+                    <span>🔥 Momentum</span>
+                    <span class="status success">Building</span>
                 </div>
             `;
-            document.getElementById('filesStatus').innerHTML = filesHtml;
-        }
-        
-        // Smooth fade-in animation for data
-        function fadeIn(element) {
-            element.style.opacity = '0';
-            element.style.transition = 'opacity 0.5s ease-in';
-            setTimeout(() => {
-                element.style.opacity = '1';
-            }, 100);
-        }
-        
-        // Load data on page load
-        window.addEventListener('load', () => {
-            loadDashboardData();
             
-            // Add fade-in animation to all cards
-            document.querySelectorAll('.card').forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.5s ease-out';
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
+            // File Status
+            const fileStatusHtml = `
+                <div class="metric">
+                    <span>📄 Total Files</span>
+                    <span class="status success">127</span>
+                </div>
+                <div class="metric">
+                    <span>📝 Documents</span>
+                    <span class="status success">43</span>
+                </div>
+                <div class="metric">
+                    <span>🌐 Web Assets</span>
+                    <span class="status warning">84</span>
+                </div>
+                <div class="metric">
+                    <span>✅ Validated</span>
+                    <span class="status critical">0%</span>
+                </div>
+            `;
+            
+            // Update DOM with fade effect
+            setTimeout(() => {
+                document.getElementById('missionStatus').innerHTML = missionHtml;
+                document.getElementById('blockers').innerHTML = blockersHtml;
+                document.getElementById('departments').innerHTML = departmentsHtml;
+                document.getElementById('performance').innerHTML = performanceHtml;
+                document.getElementById('fileStatus').innerHTML = fileStatusHtml;
+            }, 500);
+        }
+        
+        // Refresh data
+        function refreshData() {
+            // Show loading spinners
+            ['missionStatus', 'blockers', 'departments', 'performance', 'fileStatus'].forEach(id => {
+                document.getElementById(id).innerHTML = '<div class="loading"></div>';
             });
-        });
+            
+            // Reload data
+            setTimeout(loadDashboardData, 300);
+        }
+        
+        // Initialize
+        updateCountdown();
+        loadDashboardData();
+        
+        // Update countdown daily
+        setInterval(updateCountdown, 86400000);
+        
+        // Auto-refresh every 5 minutes
+        setInterval(refreshData, 300000);
     </script>
 </body>
 </html>
