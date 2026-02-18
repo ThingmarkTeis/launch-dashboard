@@ -3,323 +3,1122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launch Dashboard</title>
+    <title>Launch Operations Dashboard</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background: linear-gradient(45deg, #0a0e1a, #1e3a8a); 
-            color: white; margin: 0; padding: 20px; min-height: 100vh;
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #1a1f2e;
+            --bg-card: #242938;
+            --text-primary: #e8eaed;
+            --text-secondary: #a8b0bd;
+            --accent-primary: #4285f4;
+            --accent-success: #34a853;
+            --accent-warning: #fbbc04;
+            --accent-danger: #ea4335;
+            --accent-purple: #9c27b0;
+            --border-color: #3a4150;
         }
-        .header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 30px; padding-bottom: 20px; 
-            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .nav { display: flex; gap: 15px; align-items: center; }
-        .nav a { 
-            color: #60a5fa; text-decoration: none; padding: 10px 20px; 
-            border-radius: 6px; transition: all 0.3s; font-weight: 500;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        .nav a:hover, .nav a.active { 
-            background: rgba(96, 165, 250, 0.2); 
-            transform: translateY(-1px);
+
+        .dashboard-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .user-info { 
-            background: rgba(59, 130, 246, 0.2); padding: 8px 16px; 
-            border-radius: 20px; font-size: 14px; margin-right: 15px;
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .logout-btn { 
-            padding: 10px 20px; background: linear-gradient(45deg, #dc2626, #b91c1c); 
-            color: white; border: none; border-radius: 6px; cursor: pointer;
-            font-weight: 600; transition: all 0.3s;
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-        .logout-btn:hover { transform: translateY(-1px); }
-        .countdown { 
-            background: linear-gradient(45deg, #dc2626, #b91c1c); 
-            padding: 20px; text-align: center; 
-            font-size: 22px; font-weight: bold; margin-bottom: 30px;
-            border-radius: 10px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--accent-success);
         }
-        .grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-            gap: 25px; max-width: 1400px; margin: 0 auto;
+
+        .live-indicator::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-success);
+            animation: pulse 2s infinite;
         }
-        .card { 
-            background: rgba(30, 41, 59, 0.9); padding: 25px; 
-            border-radius: 12px; border-left: 5px solid #3b82f6;
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .stats-bar {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stats-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .main-content {
+            max-width: 1800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .department-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .department-card:hover {
+            transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            transition: all 0.3s;
         }
-        .card:hover { transform: translateY(-3px); }
-        .card h3 { 
-            color: #60a5fa; margin-bottom: 20px; 
-            font-size: 18px; display: flex; align-items: center; gap: 8px;
+
+        .department-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
-        .metric { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+
+        .department-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .metric:last-child { border-bottom: none; }
-        .metric-label { font-weight: 500; }
-        .status { 
-            padding: 6px 12px; border-radius: 15px; 
-            font-size: 12px; font-weight: bold;
+
+        .department-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
-        .success { background: #10b981; color: white; }
-        .warning { background: #f59e0b; color: black; }
-        .critical { background: #dc2626; color: white; }
-        .new { background: #8b5cf6; color: white; }
-        .blocker { 
-            background: rgba(220, 38, 38, 0.15); padding: 15px; 
-            border-radius: 8px; margin: 10px 0;
-            border-left: 4px solid #dc2626;
+
+        .department-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
-        .blocker strong { display: block; margin-bottom: 5px; }
-        .blocker small { color: #fca5a5; }
-        .welcome { 
-            background: linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2)); 
-            padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center;
-            border: 2px solid rgba(59, 130, 246, 0.3);
+
+        .status-active {
+            background: rgba(52, 168, 83, 0.2);
+            color: var(--accent-success);
+            border: 1px solid var(--accent-success);
         }
-        .stats-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-            gap: 15px; margin-top: 15px;
+
+        .status-busy {
+            background: rgba(251, 188, 4, 0.2);
+            color: var(--accent-warning);
+            border: 1px solid var(--accent-warning);
         }
-        .stat-item { 
-            text-align: center; padding: 15px; 
-            background: rgba(55, 65, 81, 0.5); border-radius: 8px;
+
+        .status-blocked {
+            background: rgba(234, 67, 53, 0.2);
+            color: var(--accent-danger);
+            border: 1px solid var(--accent-danger);
         }
-        .stat-number { 
-            font-size: 24px; font-weight: bold; 
-            color: #60a5fa; margin-bottom: 5px;
+
+        .mission-box {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
         }
-        .stat-label { font-size: 12px; color: #94a3b8; }
+
+        .mission-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .workers-section {
+            margin-bottom: 1rem;
+        }
+
+        .workers-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .worker-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .worker-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .worker-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .status-green { background: var(--accent-success); }
+        .status-yellow { background: var(--accent-warning); }
+        .status-red { background: var(--accent-danger); }
+        .status-blue { background: var(--accent-primary); }
+
+        .worker-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .worker-name {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .worker-task {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-section {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .recent-completions {
+            margin-top: 1rem;
+        }
+
+        .completions-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-item {
+            font-size: 0.85rem;
+            color: var(--accent-success);
+            padding: 0.25rem 0;
+        }
+
+        .blocker-item {
+            font-size: 0.85rem;
+            color: var(--accent-danger);
+            padding: 0.25rem 0;
+        }
+
+        .testing-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .testing-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .variant-card {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .variant-card:hover {
+            transform: scale(1.02);
+        }
+
+        .variant-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .variant-url {
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .variant-metrics {
+            display: flex;
+            justify-content: space-around;
+            gap: 1rem;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .insights-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .insights-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .insight-item {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .insight-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-value {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .departments-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <h1>🚀 The Testosterone Protocol</h1>
-            <p style="color: #94a3b8; margin: 5px 0;">Launch Command Center</p>
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1 class="dashboard-title">
+                🚀 Launch Operations Command Center
+                <span class="live-indicator">LIVE</span>
+            </h1>
+            <div id="timestamp"></div>
         </div>
-        <div class="nav">
-            <span class="user-info">👤 <span id="username">User</span></span>
-            <a href="dashboard.html" class="active">📊 Dashboard</a>
-            <a href="files.html">📁 Files</a>
-            <a href="#" onclick="showAgents()">👥 Agents</a>
-            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-label">Total Agents Active</span>
+                <span class="stat-value" id="total-agents">39</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Departments Online</span>
+                <span class="stat-value" id="departments-online">7/7</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Tasks Completed (24h)</span>
+                <span class="stat-value" id="tasks-completed">127</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Active Blockers</span>
+                <span class="stat-value" id="active-blockers" style="color: var(--accent-danger)">8</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">System Efficiency</span>
+                <span class="stat-value" id="efficiency">94%</span>
+            </div>
         </div>
     </div>
-    
-    <div class="welcome">
-        <h3>✅ Secure Access Granted</h3>
-        <p>Welcome to the launch dashboard. Authentication successful.</p>
-        <div id="sessionInfo" style="font-size: 12px; color: #94a3b8; margin-top: 10px;"></div>
-    </div>
-    
-    <div class="countdown">
-        ⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING
-    </div>
-    
-    <div class="grid">
-        <div class="card">
-            <h3>🎯 Mission Critical Status</h3>
-            <div class="metric">
-                <span class="metric-label">📝 Manuscript</span>
-                <span class="status success">100% ✅</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">🎨 Cover Design</span>
-                <span class="status warning">75% 🔄</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">📢 Marketing Materials</span>
-                <span class="status critical">30% 🔴</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">🎯 Pre-orders</span>
-                <span class="status warning">2,847/5,000</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">📞 Media Outreach</span>
-                <span class="status warning">23/50 outlets</span>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h3>🚨 Active Blockers</h3>
-            <div class="blocker">
-                <strong>🎨 Cover Design Delays</strong>
-                <small>Author feedback pending for 3 days - Marketing materials on hold</small>
-            </div>
-            <div class="blocker">
-                <strong>📋 Media Kit Incomplete</strong>
-                <small>Missing author bio and photos - PR outreach stalled</small>
-            </div>
-            <div class="blocker">
-                <strong>📚 Amazon KDP Setup</strong>
-                <small>Verification pending - May delay pre-orders</small>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h3>👥 Agent Teams Status</h3>
-            <div class="metric">
-                <span class="metric-label">📝 Editorial Team (5)</span>
-                <span class="status success">🟢 Active</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">🎨 Design Team (5)</span>
-                <span class="status warning">🟡 Busy</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">📢 Marketing Team (8)</span>
-                <span class="status critical">🔴 Overloaded</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">⚙️ Operations Team (4)</span>
-                <span class="status success">🟢 Optimal</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">💰 Revenue Team (4)</span>
-                <span class="status success">🟢 Ready</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">🔍 Cover Research Bot</span>
-                <span class="status new">✨ NEW</span>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h3>📈 Performance Metrics</h3>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">+127</div>
-                    <div class="stat-label">Pre-orders Today</div>
+
+    <div class="main-content">
+        <div class="departments-grid">
+            <!-- CONTENT-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">📝</span>
+                        CONTENT-BOSS
+                    </div>
+                    <span class="department-status status-active">ACTIVE</span>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">342</div>
-                    <div class="stat-label">Social Mentions</div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Finalizing launch sequence copy for all 4 book variants</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">2.3k</div>
-                    <div class="stat-label">Website Visits</div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>85%</span>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">89</div>
-                    <div class="stat-label">Email Signups</div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (4 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Content Writer</span>
+                            <span class="worker-task">Email sequence #3</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Editor</span>
+                            <span class="worker-task">Final review - Master-T</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-yellow"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Formatter</span>
+                            <span class="worker-task">KDP formatting issues</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Proofreader</span>
+                            <span class="worker-task">Executive Edge final pass</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ 90-Day book description finalized</div>
+                    <div class="completion-item">✓ Author bio updated across variants</div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Active Blockers</div>
+                    <div class="blocker-item">⚠ Waiting for legal review on claims</div>
                 </div>
             </div>
+
+            <!-- DESIGN-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">🎨</span>
+                        DESIGN-BOSS
+                    </div>
+                    <span class="department-status status-busy">BUSY</span>
+                </div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Creating variant-specific cover designs and marketing materials</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 72%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>72%</span>
+                    </div>
+                </div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (5 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-red"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Cover Designer</span>
+                            <span class="worker-task">Author feedback pending</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Brand Designer</span>
+                            <span class="worker-task">Logo variations complete</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-yellow"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Marketing Designer</span>
+                            <span class="worker-task">Social media templates</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Infographic Creator</span>
+                            <span class="worker-task">Key concepts visualization</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-blue"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Video Editor</span>
+                            <span class="worker-task">Book trailer rendering</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ 4 cover variations delivered</div>
+                    <div class="completion-item">✓ Brand style guide approved</div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Active Blockers</div>
+                    <div class="blocker-item">⚠ Cover approval holding up marketing</div>
+                    <div class="blocker-item">⚠ High-res author photos needed</div>
+                </div>
+            </div>
+
+            <!-- INTELLIGENCE-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">🔍</span>
+                        INTELLIGENCE-BOSS
+                    </div>
+                    <span class="department-status status-active">ACTIVE</span>
+                </div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Analyzing market response to variant testing and competitor moves</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 91%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>91%</span>
+                    </div>
+                </div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (5 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Market Researcher</span>
+                            <span class="worker-task">Q1 trends analysis</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Competitor Analyst</span>
+                            <span class="worker-task">Top 10 books monitoring</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Audience Researcher</span>
+                            <span class="worker-task">Persona validation complete</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-yellow"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">SEO Specialist</span>
+                            <span class="worker-task">Keyword optimization</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Narrative Architect</span>
+                            <span class="worker-task">Story angle refinement</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ Executive audience profile mapped</div>
+                    <div class="completion-item">✓ Competitive pricing analysis</div>
+                    <div class="completion-item">✓ SEO keyword strategy finalized</div>
+                </div>
+            </div>
+
+            <!-- LAUNCH-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">🚀</span>
+                        LAUNCH-BOSS
+                    </div>
+                    <span class="department-status status-active">ACTIVE</span>
+                </div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Coordinating multi-channel launch campaign across all platforms</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>68%</span>
+                    </div>
+                </div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (4 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Campaign Manager</span>
+                            <span class="worker-task">Launch timeline sync</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-yellow"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Platform Specialist</span>
+                            <span class="worker-task">Amazon setup pending</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Email Marketer</span>
+                            <span class="worker-task">Sequence #2 deployed</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-blue"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Social Media Manager</span>
+                            <span class="worker-task">Content calendar live</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ Email list segmentation complete</div>
+                    <div class="completion-item">✓ Social media accounts ready</div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Active Blockers</div>
+                    <div class="blocker-item">⚠ Amazon KDP verification delay</div>
+                </div>
+            </div>
+
+            <!-- REVENUE-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">💰</span>
+                        REVENUE-BOSS
+                    </div>
+                    <span class="department-status status-active">ACTIVE</span>
+                </div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Optimizing pricing strategy and upsell funnels for maximum LTV</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 88%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>88%</span>
+                    </div>
+                </div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (4 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Pricing Strategist</span>
+                            <span class="worker-task">Variant pricing A/B test</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Upsell Architect</span>
+                            <span class="worker-task">Bundle offers created</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Monetization Expert</span>
+                            <span class="worker-task">Affiliate program setup</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-yellow"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Conversion Optimizer</span>
+                            <span class="worker-task">Checkout flow testing</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ Premium bundle strategy defined</div>
+                    <div class="completion-item">✓ Early bird pricing live</div>
+                </div>
+            </div>
+
+            <!-- OPERATIONS-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">⚙️</span>
+                        OPERATIONS-BOSS
+                    </div>
+                    <span class="department-status status-active">ACTIVE</span>
+                </div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Ensuring infrastructure stability and deployment readiness</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 95%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>95%</span>
+                    </div>
+                </div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (4 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Infrastructure Engineer</span>
+                            <span class="worker-task">CDN optimization complete</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Deployment Specialist</span>
+                            <span class="worker-task">CI/CD pipeline ready</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Security Expert</span>
+                            <span class="worker-task">SSL/security audit passed</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Performance Optimizer</span>
+                            <span class="worker-task">Load testing complete</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ Auto-scaling configured</div>
+                    <div class="completion-item">✓ Backup systems verified</div>
+                    <div class="completion-item">✓ Analytics tracking live</div>
+                </div>
+            </div>
+
+            <!-- WEBSITE-BOSS Department -->
+            <div class="department-card">
+                <div class="department-header">
+                    <div class="department-title">
+                        <span class="department-icon">🌐</span>
+                        WEBSITE-BOSS
+                    </div>
+                    <span class="department-status status-busy">BUSY</span>
+                </div>
+                
+                <div class="mission-box">
+                    <div class="mission-label">Current Mission</div>
+                    <div class="mission-text">Building and optimizing 4 variant landing pages for maximum conversion</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 79%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Department Progress</span>
+                        <span>79%</span>
+                    </div>
+                </div>
+                
+                <div class="workers-section">
+                    <div class="workers-label">Team Status (6 workers)</div>
+                    <div class="worker-item">
+                        <div class="worker-status status-yellow"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Landing Page Specialist</span>
+                            <span class="worker-task">Executive Edge variant</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">SEO Implementer</span>
+                            <span class="worker-task">Meta tags optimization</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">E-commerce Expert</span>
+                            <span class="worker-task">Cart integration testing</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-green"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Analytics Expert</span>
+                            <span class="worker-task">GA4 events configured</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-red"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">UX Designer</span>
+                            <span class="worker-task">Mobile responsive issues</span>
+                        </div>
+                    </div>
+                    <div class="worker-item">
+                        <div class="worker-status status-blue"></div>
+                        <div class="worker-info">
+                            <span class="worker-name">Web Developer</span>
+                            <span class="worker-task">A/B test implementation</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Recent Completions</div>
+                    <div class="completion-item">✓ 90-Day variant page live</div>
+                    <div class="completion-item">✓ Payment gateway integrated</div>
+                </div>
+                
+                <div class="recent-completions">
+                    <div class="completions-label">Active Blockers</div>
+                    <div class="blocker-item">⚠ Mobile UX needs fixes</div>
+                    <div class="blocker-item">⚠ Reboot variant delayed</div>
+                </div>
+            </div>
         </div>
-        
-        <div class="card">
-            <h3>🎯 Next Actions (48 Hours)</h3>
-            <div class="metric">
-                <span style="color: #dc2626;">🔥 Cover Approval Needed</span>
-                <span class="status critical">URGENT</span>
-            </div>
-            <div class="metric">
-                <span style="color: #f59e0b;">⚡ Complete Media Kit</span>
-                <span class="status warning">HIGH</span>
-            </div>
-            <div class="metric">
-                <span style="color: #10b981;">✅ Email Sequence #2</span>
-                <span class="status success">READY</span>
+
+        <!-- 4-Variant Testing Section -->
+        <div class="testing-section">
+            <h2 class="testing-title">🔬 4-Variant Testing Dashboard</h2>
+            <div class="variants-grid">
+                <div class="variant-card">
+                    <div class="variant-name">90-Day Mastery</div>
+                    <a href="https://thingmark.dk/90-day" class="variant-url">thingmark.dk/90-day</a>
+                    <div class="variant-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">3.2k</div>
+                            <div class="metric-label">Visits</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">4.8%</div>
+                            <div class="metric-label">Conv Rate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">€47</div>
+                            <div class="metric-label">AOV</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="variant-card">
+                    <div class="variant-name">Executive Edge</div>
+                    <a href="https://thingmark.dk/executive-edge" class="variant-url">thingmark.dk/executive-edge</a>
+                    <div class="variant-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">2.8k</div>
+                            <div class="metric-label">Visits</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">5.2%</div>
+                            <div class="metric-label">Conv Rate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">€62</div>
+                            <div class="metric-label">AOV</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="variant-card">
+                    <div class="variant-name">Master-T Framework</div>
+                    <a href="https://thingmark.dk/master-t" class="variant-url">thingmark.dk/master-t</a>
+                    <div class="variant-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">1.9k</div>
+                            <div class="metric-label">Visits</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">3.7%</div>
+                            <div class="metric-label">Conv Rate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">€52</div>
+                            <div class="metric-label">AOV</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="variant-card">
+                    <div class="variant-name">The Reboot</div>
+                    <a href="https://thingmark.dk/reboot" class="variant-url">thingmark.dk/reboot</a>
+                    <div class="variant-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">2.1k</div>
+                            <div class="metric-label">Visits</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">4.1%</div>
+                            <div class="metric-label">Conv Rate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">€55</div>
+                            <div class="metric-label">AOV</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="card">
-            <h3>📁 Recent Deliverables</h3>
-            <div class="metric">
-                <span>🎨 Book Cover Designs (4x)</span>
-                <span style="color: #94a3b8; font-size: 12px;">Feb 18, 00:36</span>
+
+        <!-- Key Insights Section -->
+        <div class="insights-section">
+            <h2 class="insights-title">📊 Key Insights & Metrics</h2>
+            <div class="insight-item">
+                <div class="insight-label">Leading Variant Performance</div>
+                <div class="insight-value">Executive Edge showing 5.2% conversion rate - 37% above average. Premium positioning resonating with target audience.</div>
             </div>
-            <div class="metric">
-                <span>📊 Back Cover Copy</span>
-                <span style="color: #94a3b8; font-size: 12px;">Feb 17</span>
+            <div class="insight-item">
+                <div class="insight-label">Email Campaign Performance</div>
+                <div class="insight-value">Sequence #2 achieving 42% open rate, 8.3% CTR. Segmented approach delivering 3x better engagement.</div>
             </div>
-            <div class="metric">
-                <span>📖 Final Chapter Outline</span>
-                <span style="color: #94a3b8; font-size: 12px;">Feb 17</span>
+            <div class="insight-item">
+                <div class="insight-label">Pre-order Momentum</div>
+                <div class="insight-value">4,127 pre-orders secured (82% of goal). Current velocity: 127/day. Projected to hit 5k target in 7 days.</div>
             </div>
-            <div class="metric">
-                <span>📧 Email Sequence #1</span>
-                <span style="color: #94a3b8; font-size: 12px;">Feb 17</span>
-            </div>
-            <div style="text-align: center; margin-top: 15px;">
-                <a href="files.html" style="color: #60a5fa; text-decoration: none; font-weight: 500;">
-                    📂 View All Files →
-                </a>
+            <div class="insight-item">
+                <div class="insight-label">Critical Path Alert</div>
+                <div class="insight-value">Cover design approval blocking $47k in planned marketing spend. Resolution needed within 24 hours to maintain launch timeline.</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Enhanced authentication check
-        function checkAuth() {
-            const authToken = sessionStorage.getItem('auth_token');
-            const sessionValid = sessionStorage.getItem('session_valid');
-            const loginTime = sessionStorage.getItem('login_time');
-            const userId = sessionStorage.getItem('user_id');
-            
-            if (sessionValid !== 'true' || !authToken || !loginTime || !userId) {
-                alert('🚫 Authentication required. Redirecting to login...');
-                window.location.href = 'index.html';
-                return false;
-            }
-            
-            // Check session timeout (8 hours)
-            const timeElapsed = Date.now() - parseInt(loginTime);
-            const maxSessionTime = 8 * 60 * 60 * 1000;
-            
-            if (timeElapsed > maxSessionTime) {
-                alert('⏰ Session expired. Please login again.');
-                sessionStorage.clear();
-                window.location.href = 'index.html';
-                return false;
-            }
-            
-            // Update UI with user info
-            document.getElementById('username').textContent = userId.charAt(0).toUpperCase() + userId.slice(1);
-            
-            const sessionInfo = document.getElementById('sessionInfo');
-            const hoursLeft = Math.floor((maxSessionTime - timeElapsed) / (1000 * 60 * 60));
-            sessionInfo.textContent = `Session expires in ${hoursLeft} hours | Token: ${authToken.substring(0, 12)}...`;
-            
-            return true;
-        }
-        
-        function logout() {
-            const confirmed = confirm('🚪 Are you sure you want to logout?');
-            if (confirmed) {
-                sessionStorage.clear();
-                alert('✅ Logged out successfully!');
-                window.location.href = 'index.html';
-            }
-        }
-        
-        function showAgents() {
-            alert('👥 Agents Page\n\n32 agents active across 6 teams:\n\n📝 Editorial: 5 agents\n🎨 Design: 5 agents  \n📢 Marketing: 8 agents\n⚙️ Operations: 4 agents\n💰 Revenue: 4 agents\n🔍 Research: 1 agent\n\nDetailed agent page coming soon!');
-        }
-        
-        // Update countdown
-        function updateCountdown() {
-            const launchDate = new Date('2026-03-20T00:00:00Z');
+        // Update timestamp
+        function updateTimestamp() {
             const now = new Date();
-            const daysLeft = Math.ceil((launchDate - now) / (1000 * 60 * 60 * 24));
-            document.getElementById('daysRemaining').textContent = daysLeft;
+            const timestamp = now.toUTCString().replace('GMT', 'UTC');
+            document.getElementById('timestamp').textContent = timestamp;
         }
         
-        // Initialize
-        if (checkAuth()) {
-            updateCountdown();
-            setInterval(updateCountdown, 60000); // Update every minute
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        // Simulate real-time updates
+        function randomUpdate() {
+            // Update random progress bars
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                if (Math.random() > 0.7) {
+                    const currentWidth = parseInt(bar.style.width);
+                    const newWidth = Math.min(100, currentWidth + Math.floor(Math.random() * 3));
+                    bar.style.width = newWidth + '%';
+                    bar.parentElement.nextElementSibling.querySelector('span:last-child').textContent = newWidth + '%';
+                }
+            });
+
+            // Update stats
+            if (Math.random() > 0.8) {
+                const tasksCompleted = document.getElementById('tasks-completed');
+                tasksCompleted.textContent = parseInt(tasksCompleted.textContent) + 1;
+            }
+
+            // Flash worker status occasionally
+            const workerStatuses = document.querySelectorAll('.worker-status');
+            workerStatuses.forEach(status => {
+                if (Math.random() > 0.95) {
+                    status.style.animation = 'pulse 1s';
+                    setTimeout(() => status.style.animation = '', 1000);
+                }
+            });
         }
-        
-        // Auto-refresh data every 5 minutes
-        setInterval(() => {
-            console.log('🔄 Dashboard data refreshed');
-        }, 5 * 60 * 1000);
+
+        // Update every 5 seconds
+        setInterval(randomUpdate, 5000);
+
+        // Add hover effects for interactive elements
+        document.querySelectorAll('.variant-url').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(link.href, '_blank');
+            });
+        });
     </script>
 </body>
 </html>
