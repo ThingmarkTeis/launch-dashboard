@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Dashboard - Command Center</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🚀 The Testosterone Protocol</h2>
+            <span class="nav-subtitle">Launch Command Center</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            <a href="pages/agents.html" class="nav-link">Agents</a>
+            <a href="pages/files.html" class="nav-link">Files</a>
+            <a href="pages/pipeline.html" class="nav-link">Pipeline</a>
+            <a href="#" onclick="logout()" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="countdown-bar">
+        <div class="countdown-content">
+            ⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING
+        </div>
+    </div>
+    
+    <main class="dashboard-main">
+        <div class="dashboard-grid">
+            <!-- Critical Status -->
+            <div class="card critical-card">
+                <div class="card-header">
+                    <h3>🎯 Mission Critical Status</h3>
+                    <div class="status-indicator critical"></div>
+                </div>
+                <div class="metrics-list" id="criticalMetrics">
+                    <div class="metric">
+                        <span class="metric-label">📝 Manuscript</span>
+                        <span class="metric-value status-success">100% ✅</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">🎨 Cover Design</span>
+                        <span class="metric-value status-warning">75% 🔄</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">📢 Marketing Materials</span>
+                        <span class="metric-value status-critical">30% 🔴</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">🎯 Pre-orders</span>
+                        <span class="metric-value status-warning">2,847/5,000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blockers -->
+            <div class="card blockers-card">
+                <div class="card-header">
+                    <h3>🚨 Active Blockers</h3>
+                    <div class="urgency-badge">HIGH PRIORITY</div>
+                </div>
+                <div class="blockers-list" id="blockersList">
+                    <div class="blocker">
+                        <div class="blocker-title">🎨 Cover Design Delays</div>
+                        <div class="blocker-desc">Author feedback pending for 3 days</div>
+                        <div class="blocker-impact">Blocks: Marketing materials</div>
+                    </div>
+                    <div class="blocker">
+                        <div class="blocker-title">📋 Media Kit Incomplete</div>
+                        <div class="blocker-desc">Missing author bio and photos</div>
+                        <div class="blocker-impact">Blocks: PR outreach</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Agent Status -->
+            <div class="card agents-card">
+                <div class="card-header">
+                    <h3>👥 Agent Teams</h3>
+                    <div class="agent-count">32 Active</div>
+                </div>
+                <div class="agent-teams" id="agentTeams">
+                    <div class="agent-team">
+                        <span class="team-name">📝 Editorial (5)</span>
+                        <span class="team-status status-success">🟢 Active</span>
+                    </div>
+                    <div class="agent-team">
+                        <span class="team-name">🎨 Design (5)</span>
+                        <span class="team-status status-warning">🟡 Busy</span>
+                    </div>
+                    <div class="agent-team">
+                        <span class="team-name">📢 Marketing (8)</span>
+                        <span class="team-status status-critical">🔴 Overloaded</span>
+                    </div>
+                    <div class="agent-team">
+                        <span class="team-name">🔍 Research Bot</span>
+                        <span class="team-status status-new">✨ NEW</span>
+                    </div>
+                </div>
+                <a href="pages/agents.html" class="card-action">View All Agents →</a>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card activity-card">
+                <div class="card-header">
+                    <h3>📁 Recent Deliverables</h3>
+                    <div class="refresh-time" id="refreshTime">Updated: Now</div>
+                </div>
+                <div class="activity-list" id="recentActivity">
+                    <div class="activity-item">
+                        <span class="activity-icon">🎨</span>
+                        <div class="activity-content">
+                            <div class="activity-title">Cover Designs (4x)</div>
+                            <div class="activity-time">Feb 18, 00:36</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-icon">📊</span>
+                        <div class="activity-content">
+                            <div class="activity-title">Back Cover Copy</div>
+                            <div class="activity-time">Feb 17</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="pages/files.html" class="card-action">Browse All Files →</a>
+            </div>
+            
+            <!-- Pipeline Progress -->
+            <div class="card pipeline-card">
+                <div class="card-header">
+                    <h3>🏗️ Launch Pipeline</h3>
+                    <div class="pipeline-progress">60% Complete</div>
+                </div>
+                <div class="pipeline-stages" id="pipelineStages">
+                    <div class="stage stage-complete">
+                        <div class="stage-icon">✅</div>
+                        <div class="stage-name">Content</div>
+                    </div>
+                    <div class="stage stage-active">
+                        <div class="stage-icon">🔄</div>
+                        <div class="stage-name">Design</div>
+                    </div>
+                    <div class="stage stage-pending">
+                        <div class="stage-icon">⏳</div>
+                        <div class="stage-name">Marketing</div>
+                    </div>
+                    <div class="stage stage-pending">
+                        <div class="stage-icon">🚀</div>
+                        <div class="stage-name">Launch</div>
+                    </div>
+                </div>
+                <a href="pages/pipeline.html" class="card-action">View Pipeline →</a>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="card metrics-card">
+                <div class="card-header">
+                    <h3>📈 Performance Metrics</h3>
+                    <div class="trend-indicator positive">↗️ Trending Up</div>
+                </div>
+                <div class="metrics-grid" id="performanceMetrics">
+                    <div class="metric-item">
+                        <div class="metric-number">+127</div>
+                        <div class="metric-label">Pre-orders Today</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-number">342</div>
+                        <div class="metric-label">Social Mentions</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-number">2.3k</div>
+                        <div class="metric-label">Website Visits</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Next Actions Section -->
+        <div class="next-actions">
+            <h3>⚡ Next 48 Hours - Critical Actions</h3>
+            <div class="actions-grid">
+                <div class="action-item urgent">
+                    <div class="action-icon">🔥</div>
+                    <div class="action-content">
+                        <div class="action-title">Cover Approval Needed</div>
+                        <div class="action-desc">Unblocks marketing materials</div>
+                    </div>
+                </div>
+                <div class="action-item high">
+                    <div class="action-icon">⚡</div>
+                    <div class="action-content">
+                        <div class="action-title">Complete Media Kit</div>
+                        <div class="action-desc">Enables PR outreach</div>
+                    </div>
+                </div>
+                <div class="action-item ready">
+                    <div class="action-icon">✅</div>
+                    <div class="action-content">
+                        <div class="action-title">Email Sequence #2</div>
+                        <div class="action-desc">Ready for deployment</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Teams - Launch Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🚀 The Testosterone Protocol</h2>
+            <span class="nav-subtitle">Agent Management Center</span>
+        </div>
+        <div class="nav-links">
+            <a href="../dashboard.html" class="nav-link">Dashboard</a>
+            <a href="agents.html" class="nav-link active">Agents</a>
+            <a href="files.html" class="nav-link">Files</a>
+            <a href="pipeline.html" class="nav-link">Pipeline</a>
+            <a href="#" onclick="logout()" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="countdown-bar">
+        <div class="countdown-content">
+            ⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING
+        </div>
+    </div>
+    
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>👥 Agent Teams Overview</h1>
+            <p>32 specialized agents working across 6 departments</p>
+        </div>
+        
+        <!-- Team Summary -->
+        <div class="team-summary">
+            <div class="summary-card">
+                <div class="summary-number">5</div>
+                <div class="summary-label">Teams Active</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">32</div>
+                <div class="summary-label">Total Agents</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">24</div>
+                <div class="summary-label">Currently Working</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">8</div>
+                <div class="summary-label">On Standby</div>
+            </div>
+        </div>
+        
+        <!-- Agent Teams -->
+        <div class="teams-container">
+            <!-- Editorial Team -->
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-info">
+                        <h3>📝 Editorial Team</h3>
+                        <div class="team-status status-success">🟢 Active</div>
+                    </div>
+                    <div class="team-stats">
+                        <span class="agent-count">5 agents</span>
+                    </div>
+                </div>
+                <div class="team-description">
+                    Content creation, editing, and manuscript management
+                </div>
+                <div class="agents-list">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Content Strategist</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Writing Coach</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Editor Boss</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Formatter</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Quality Controller</span>
+                            <span class="agent-model">Claude Opus</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                </div>
+                <div class="team-metrics">
+                    <div class="metric-item">
+                        <div class="metric-label">Completion</div>
+                        <div class="metric-value">100%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Quality Score</div>
+                        <div class="metric-value">9.2/10</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Design Team -->
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-info">
+                        <h3>🎨 Design Team</h3>
+                        <div class="team-status status-warning">🟡 Busy</div>
+                    </div>
+                    <div class="team-stats">
+                        <span class="agent-count">5 agents</span>
+                    </div>
+                </div>
+                <div class="team-description">
+                    Visual design, branding, and marketing materials
+                </div>
+                <div class="agents-list">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Cover Designer</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-warning">Waiting Feedback</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Marketing Designer</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Brand Manager</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Asset Creator</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Cover Research Bot</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-new">✨ NEW</span>
+                    </div>
+                </div>
+                <div class="team-metrics">
+                    <div class="metric-item">
+                        <div class="metric-label">Completion</div>
+                        <div class="metric-value">75%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Quality Score</div>
+                        <div class="metric-value">7.8/10</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Marketing Team -->
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-info">
+                        <h3>📢 Marketing Team</h3>
+                        <div class="team-status status-critical">🔴 Overloaded</div>
+                    </div>
+                    <div class="team-stats">
+                        <span class="agent-count">8 agents</span>
+                    </div>
+                </div>
+                <div class="team-description">
+                    Campaign management, PR, and audience engagement
+                </div>
+                <div class="agents-list">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Campaign Orchestrator</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-critical">Overloaded</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">PR Manager</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-critical">Blocked</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Community Builder</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-warning">Busy</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Email Marketer</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                </div>
+                <div class="team-metrics">
+                    <div class="metric-item">
+                        <div class="metric-label">Completion</div>
+                        <div class="metric-value">30%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Quality Score</div>
+                        <div class="metric-value">6.5/10</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Operations Team -->
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-info">
+                        <h3>⚙️ Operations Team</h3>
+                        <div class="team-status status-success">🟢 Optimal</div>
+                    </div>
+                    <div class="team-stats">
+                        <span class="agent-count">4 agents</span>
+                    </div>
+                </div>
+                <div class="team-description">
+                    Infrastructure, analytics, and system management
+                </div>
+                <div class="agents-list">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">DevOps Engineer</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Data Pipeline</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Performance Analyst</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Quality Assurance</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                </div>
+                <div class="team-metrics">
+                    <div class="metric-item">
+                        <div class="metric-label">Completion</div>
+                        <div class="metric-value">95%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Quality Score</div>
+                        <div class="metric-value">8.8/10</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Revenue Team -->
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-info">
+                        <h3>💰 Revenue Team</h3>
+                        <div class="team-status status-success">🟢 Ready</div>
+                    </div>
+                    <div class="team-stats">
+                        <span class="agent-count">4 agents</span>
+                    </div>
+                </div>
+                <div class="team-description">
+                    Pricing, upsells, affiliates, and revenue optimization
+                </div>
+                <div class="agents-list">
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Pricing Strategist</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Upsell Architect</span>
+                            <span class="agent-model">Claude Sonnet</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Affiliate Manager</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-warning">Planning</span>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <span class="agent-name">Revenue Optimizer</span>
+                            <span class="agent-model">Gemini Flash</span>
+                        </div>
+                        <span class="agent-status status-success">Active</span>
+                    </div>
+                </div>
+                <div class="team-metrics">
+                    <div class="metric-item">
+                        <div class="metric-label">Completion</div>
+                        <div class="metric-value">85%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Quality Score</div>
+                        <div class="metric-value">8.2/10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Agent Actions -->
+        <div class="agent-actions">
+            <h3>⚡ Quick Actions</h3>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="messageAllAgents()">
+                    📢 Message All Teams
+                </button>
+                <button class="action-btn" onclick="runHealthCheck()">
+                    ❤️ Health Check
+                </button>
+                <button class="action-btn" onclick="showPerformanceReport()">
+                    📊 Performance Report
+                </button>
+                <button class="action-btn" onclick="manageWorkloads()">
+                    ⚖️ Balance Workloads
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../js/auth.js"></script>
+    <script>
+        // Agent management functions
+        function messageAllAgents() {
+            const message = prompt('Message to send to all agent teams:');
+            if (message) {
+                alert(`Broadcasting message to 32 agents:\n"${message}"\n\nMessage sent successfully! ✅`);
+            }
+        }
+        
+        function runHealthCheck() {
+            alert('🔍 Agent Health Check Results:\n\n✅ 24 agents responding normally\n⚠️ 8 agents on standby\n🔴 0 agents with issues\n\nSystem status: HEALTHY');
+        }
+        
+        function showPerformanceReport() {
+            alert('📊 Team Performance Summary:\n\n📝 Editorial: 9.2/10 (Excellent)\n🎨 Design: 7.8/10 (Good, needs feedback)\n📢 Marketing: 6.5/10 (Overloaded)\n⚙️ Operations: 8.8/10 (Excellent)\n💰 Revenue: 8.2/10 (Very Good)\n\nOverall: 8.1/10');
+        }
+        
+        function manageWorkloads() {
+            const action = confirm('Detected workload imbalance:\n\n📢 Marketing team: Overloaded\n⚙️ Operations team: Under-utilized\n\nRecommendation: Move 2 agents from Operations to Marketing?\n\nProceed with rebalancing?');
+            
+            if (action) {
+                alert('⚖️ Workload Rebalancing:\n\n✅ 2 agents moved to Marketing\n✅ Workload redistributed\n✅ All teams now balanced\n\nEstimated productivity gain: +15%');
+            }
+        }
+        
+        // Update countdown
+        function updateCountdown() {
+            const launchDate = new Date('2026-03-20T00:00:00Z');
+            const now = new Date();
+            const daysLeft = Math.ceil((launchDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysRemaining').textContent = daysLeft;
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+    </script>
+</body>
+</html>

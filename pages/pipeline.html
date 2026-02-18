@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Pipeline - Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🚀 The Testosterone Protocol</h2>
+            <span class="nav-subtitle">Launch Pipeline</span>
+        </div>
+        <div class="nav-links">
+            <a href="../dashboard.html" class="nav-link">Dashboard</a>
+            <a href="agents.html" class="nav-link">Agents</a>
+            <a href="files.html" class="nav-link">Files</a>
+            <a href="pipeline.html" class="nav-link active">Pipeline</a>
+            <a href="#" onclick="logout()" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="countdown-bar">
+        <div class="countdown-content">
+            ⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING
+        </div>
+    </div>
+    
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>🏗️ Launch Pipeline Overview</h1>
+            <p>Track progress across all launch phases</p>
+        </div>
+        
+        <!-- Pipeline Progress -->
+        <div class="pipeline-overview">
+            <div class="pipeline-progress-bar">
+                <div class="progress-fill" style="width: 60%"></div>
+            </div>
+            <div class="pipeline-percentage">60% Complete</div>
+        </div>
+        
+        <!-- Pipeline Stages -->
+        <div class="pipeline-stages-detailed">
+            <div class="stage-card complete">
+                <div class="stage-header">
+                    <div class="stage-icon">✅</div>
+                    <div class="stage-info">
+                        <h3>Content Creation</h3>
+                        <div class="stage-status">Complete</div>
+                    </div>
+                    <div class="stage-percentage">100%</div>
+                </div>
+                <div class="stage-tasks">
+                    <div class="task complete">✅ Manuscript writing</div>
+                    <div class="task complete">✅ Content editing</div>
+                    <div class="task complete">✅ Final proofread</div>
+                    <div class="task complete">✅ Chapter formatting</div>
+                </div>
+                <div class="stage-timeline">
+                    <span>Completed: Feb 15, 2026</span>
+                </div>
+            </div>
+            
+            <div class="stage-card active">
+                <div class="stage-header">
+                    <div class="stage-icon">🔄</div>
+                    <div class="stage-info">
+                        <h3>Design & Branding</h3>
+                        <div class="stage-status">In Progress</div>
+                    </div>
+                    <div class="stage-percentage">75%</div>
+                </div>
+                <div class="stage-tasks">
+                    <div class="task complete">✅ Cover concepts (4x)</div>
+                    <div class="task complete">✅ Brand guidelines</div>
+                    <div class="task active">🔄 Cover approval (BLOCKED)</div>
+                    <div class="task pending">⏳ Marketing visuals</div>
+                </div>
+                <div class="stage-timeline">
+                    <span>Target: Feb 20, 2026</span>
+                </div>
+            </div>
+            
+            <div class="stage-card pending">
+                <div class="stage-header">
+                    <div class="stage-icon">⏳</div>
+                    <div class="stage-info">
+                        <h3>Marketing Campaign</h3>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="stage-percentage">30%</div>
+                </div>
+                <div class="stage-tasks">
+                    <div class="task complete">✅ Back cover copy</div>
+                    <div class="task complete">✅ Email sequence #1</div>
+                    <div class="task active">🔄 Social media content</div>
+                    <div class="task blocked">🚫 PR campaign (waiting media kit)</div>
+                </div>
+                <div class="stage-timeline">
+                    <span>Target: Feb 25, 2026</span>
+                </div>
+            </div>
+            
+            <div class="stage-card pending">
+                <div class="stage-header">
+                    <div class="stage-icon">📱</div>
+                    <div class="stage-info">
+                        <h3>Platform Setup</h3>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="stage-percentage">20%</div>
+                </div>
+                <div class="stage-tasks">
+                    <div class="task complete">✅ Amazon KDP account</div>
+                    <div class="task active">🔄 Book metadata</div>
+                    <div class="task pending">⏳ Distribution channels</div>
+                    <div class="task pending">⏳ Pre-order setup</div>
+                </div>
+                <div class="stage-timeline">
+                    <span>Target: Mar 5, 2026</span>
+                </div>
+            </div>
+            
+            <div class="stage-card pending">
+                <div class="stage-header">
+                    <div class="stage-icon">🚀</div>
+                    <div class="stage-info">
+                        <h3>Launch Execution</h3>
+                        <div class="stage-status">Not Started</div>
+                    </div>
+                    <div class="stage-percentage">0%</div>
+                </div>
+                <div class="stage-tasks">
+                    <div class="task pending">⏳ Launch day coordination</div>
+                    <div class="task pending">⏳ Media outreach blitz</div>
+                    <div class="task pending">⏳ Social media push</div>
+                    <div class="task pending">⏳ Email announcements</div>
+                </div>
+                <div class="stage-timeline">
+                    <span>Target: Mar 20, 2026</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Critical Path -->
+        <div class="critical-path">
+            <h3>🔥 Critical Path Analysis</h3>
+            <div class="critical-items">
+                <div class="critical-item urgent">
+                    <div class="critical-icon">⚠️</div>
+                    <div class="critical-content">
+                        <div class="critical-title">Cover Approval Bottleneck</div>
+                        <div class="critical-desc">Blocks marketing materials, social content, and PR campaign</div>
+                        <div class="critical-impact">Impact: 3-5 day delay if not resolved by Feb 19</div>
+                    </div>
+                </div>
+                <div class="critical-item high">
+                    <div class="critical-icon">⚡</div>
+                    <div class="critical-content">
+                        <div class="critical-title">Media Kit Completion</div>
+                        <div class="critical-desc">Required for PR outreach and media interviews</div>
+                        <div class="critical-impact">Impact: Potential missed media opportunities</div>
+                    </div>
+                </div>
+                <div class="critical-item medium">
+                    <div class="critical-icon">🔄</div>
+                    <div class="critical-content">
+                        <div class="critical-title">Platform Distribution</div>
+                        <div class="critical-desc">Amazon KDP, other retailers need final assets</div>
+                        <div class="critical-impact">Impact: Delayed availability in key markets</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Timeline View -->
+        <div class="timeline-view">
+            <h3>📅 Launch Timeline</h3>
+            <div class="timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-date">Feb 15</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">✅ Manuscript Complete</div>
+                        <div class="timeline-desc">Final draft approved and locked</div>
+                    </div>
+                </div>
+                <div class="timeline-item current">
+                    <div class="timeline-date">Feb 18</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🔄 Design Phase</div>
+                        <div class="timeline-desc">Cover concepts delivered, awaiting approval</div>
+                    </div>
+                </div>
+                <div class="timeline-item upcoming">
+                    <div class="timeline-date">Feb 25</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">📢 Marketing Launch</div>
+                        <div class="timeline-desc">Full campaign rollout begins</div>
+                    </div>
+                </div>
+                <div class="timeline-item upcoming">
+                    <div class="timeline-date">Mar 5</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">📚 Pre-orders Live</div>
+                        <div class="timeline-desc">Book available for pre-order</div>
+                    </div>
+                </div>
+                <div class="timeline-item upcoming">
+                    <div class="timeline-date">Mar 20</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🚀 LAUNCH DAY</div>
+                        <div class="timeline-desc">Book goes live worldwide</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../js/auth.js"></script>
+    <script>
+        // Update countdown
+        function updateCountdown() {
+            const launchDate = new Date('2026-03-20T00:00:00Z');
+            const now = new Date();
+            const daysLeft = Math.ceil((launchDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysRemaining').textContent = daysLeft;
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+        
+        // Interactive pipeline elements
+        document.querySelectorAll('.stage-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const stageName = card.querySelector('h3').textContent;
+                const stageStatus = card.querySelector('.stage-status').textContent;
+                const stagePercentage = card.querySelector('.stage-percentage').textContent;
+                
+                alert(`📋 ${stageName} Details:\n\nStatus: ${stageStatus}\nProgress: ${stagePercentage}\n\nClick tasks for detailed breakdown and actions.`);
+            });
+        });
+        
+        document.querySelectorAll('.critical-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const title = item.querySelector('.critical-title').textContent;
+                const desc = item.querySelector('.critical-desc').textContent;
+                const impact = item.querySelector('.critical-impact').textContent;
+                
+                const action = confirm(`🔥 Critical Issue: ${title}\n\n${desc}\n\n${impact}\n\nWould you like to take action on this item?`);
+                
+                if (action) {
+                    alert(`✅ Action logged for: ${title}\n\nThis would typically:\n• Notify relevant agents\n• Update task priorities\n• Adjust timeline if needed\n• Send escalation alerts`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

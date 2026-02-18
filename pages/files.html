@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Files - Launch Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🚀 The Testosterone Protocol</h2>
+            <span class="nav-subtitle">Project Files</span>
+        </div>
+        <div class="nav-links">
+            <a href="../dashboard.html" class="nav-link">Dashboard</a>
+            <a href="agents.html" class="nav-link">Agents</a>
+            <a href="files.html" class="nav-link active">Files</a>
+            <a href="pipeline.html" class="nav-link">Pipeline</a>
+            <a href="#" onclick="logout()" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="countdown-bar">
+        <div class="countdown-content">
+            ⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING
+        </div>
+    </div>
+    
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>📁 Project Files & Deliverables</h1>
+            <p>Access all project assets, documents, and deliverables</p>
+        </div>
+        
+        <!-- File Browser -->
+        <div class="file-browser">
+            <div class="folder-card" id="covers">
+                <div class="folder-header">
+                    <h3>🎨 Cover Designs</h3>
+                    <span class="file-count">4 files</span>
+                </div>
+                <div class="file-list">
+                    <div class="file-item" onclick="viewFile('executive-suite-cover.png')">
+                        <span class="file-icon">🖼️</span>
+                        <div class="file-info">
+                            <span class="file-name">executive-suite-cover.png</span>
+                            <span class="file-meta">4.3 MB • Feb 18, 00:34</span>
+                        </div>
+                        <span class="file-action">Preview</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('natural-elements-cover.png')">
+                        <span class="file-icon">🖼️</span>
+                        <div class="file-info">
+                            <span class="file-name">natural-elements-cover.png</span>
+                            <span class="file-meta">6.8 MB • Feb 18, 00:36</span>
+                        </div>
+                        <span class="file-action">Preview</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('scientific-authority-cover.png')">
+                        <span class="file-icon">🖼️</span>
+                        <div class="file-info">
+                            <span class="file-name">scientific-authority-cover.png</span>
+                            <span class="file-meta">5.4 MB • Feb 18, 00:35</span>
+                        </div>
+                        <span class="file-action">Preview</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('energy-transformation-cover.png')">
+                        <span class="file-icon">🖼️</span>
+                        <div class="file-info">
+                            <span class="file-name">energy-transformation-cover.png</span>
+                            <span class="file-meta">6.4 MB • Feb 18, 00:36</span>
+                        </div>
+                        <span class="file-action">Preview</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="folder-card">
+                <div class="folder-header">
+                    <h3>📝 Content & Copy</h3>
+                    <span class="file-count">8 files</span>
+                </div>
+                <div class="file-list">
+                    <div class="file-item" onclick="viewFile('back-cover-copy.md')">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <span class="file-name">back-cover-copy.md</span>
+                            <span class="file-meta">2.1 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">Edit</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('final-chapter-outline.md')">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <span class="file-name">final-chapter-outline.md</span>
+                            <span class="file-meta">5.2 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('email-1-sample.md')">
+                        <span class="file-icon">📧</span>
+                        <div class="file-info">
+                            <span class="file-name">email-1-sample.md</span>
+                            <span class="file-meta">1.8 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('linkedin-post-sample.md')">
+                        <span class="file-icon">📱</span>
+                        <div class="file-info">
+                            <span class="file-name">linkedin-post-sample.md</span>
+                            <span class="file-meta">0.9 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="folder-card">
+                <div class="folder-header">
+                    <h3>📊 Reports & Analytics</h3>
+                    <span class="file-count">12 files</span>
+                </div>
+                <div class="file-list">
+                    <div class="file-item" onclick="viewFile('pipeline-summary.md')">
+                        <span class="file-icon">📈</span>
+                        <div class="file-info">
+                            <span class="file-name">pipeline-summary.md</span>
+                            <span class="file-meta">3.4 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('agent-performance.json')">
+                        <span class="file-icon">🔧</span>
+                        <div class="file-info">
+                            <span class="file-name">agent-performance.json</span>
+                            <span class="file-meta">12.3 KB • Feb 18</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('standup-2026-02-17.md')">
+                        <span class="file-icon">🗓️</span>
+                        <div class="file-info">
+                            <span class="file-name">standup-2026-02-17.md</span>
+                            <span class="file-meta">2.7 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="folder-card">
+                <div class="folder-header">
+                    <h3>⚙️ Configuration & Scripts</h3>
+                    <span class="file-count">6 files</span>
+                </div>
+                <div class="file-list">
+                    <div class="file-item" onclick="viewFile('daily-rollup.sh')">
+                        <span class="file-icon">⚙️</span>
+                        <div class="file-info">
+                            <span class="file-name">daily-rollup.sh</span>
+                            <span class="file-meta">1.6 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">Edit</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('daily-standup.sh')">
+                        <span class="file-icon">⚙️</span>
+                        <div class="file-info">
+                            <span class="file-name">daily-standup.sh</span>
+                            <span class="file-meta">4.1 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">Edit</span>
+                    </div>
+                    <div class="file-item" onclick="viewFile('overnight-session-state.json')">
+                        <span class="file-icon">🔧</span>
+                        <div class="file-info">
+                            <span class="file-name">overnight-session-state.json</span>
+                            <span class="file-meta">0.9 KB • Feb 17</span>
+                        </div>
+                        <span class="file-action">View</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- File Actions -->
+        <div class="file-actions">
+            <h3>📁 Quick Actions</h3>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="uploadFiles()">
+                    ⬆️ Upload Files
+                </button>
+                <button class="action-btn" onclick="createFolder()">
+                    📁 Create Folder
+                </button>
+                <button class="action-btn" onclick="syncWithServer()">
+                    🔄 Sync with Server
+                </button>
+                <button class="action-btn" onclick="exportArchive()">
+                    📦 Export Archive
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../js/auth.js"></script>
+    <script>
+        // File management functions
+        function viewFile(filename) {
+            // In production, this would actually open/preview the file
+            alert(`📄 File: ${filename}\n\nIn production version:\n• Images: Show full preview\n• Documents: Open editor\n• Scripts: Syntax highlighting\n• JSON: Formatted display\n\nCurrent: Placeholder view`);
+        }
+        
+        function uploadFiles() {
+            alert('📤 File Upload:\n\nSupported formats:\n• Images: PNG, JPG, WebP\n• Documents: MD, TXT, PDF\n• Code: JS, JSON, SH\n• Archives: ZIP, TAR\n\nMax size: 50MB per file');
+        }
+        
+        function createFolder() {
+            const folderName = prompt('Create new folder:\n\nEnter folder name:');
+            if (folderName) {
+                alert(`✅ Folder created: "${folderName}"\n\nLocation: /deliverables/${folderName}/\nPermissions: Read/Write\nAgent access: Enabled`);
+            }
+        }
+        
+        function syncWithServer() {
+            alert('🔄 Syncing with server...\n\n✅ Checking for updates\n✅ Uploading local changes\n✅ Downloading new files\n✅ Resolving conflicts\n\nSync complete! 12 files updated.');
+        }
+        
+        function exportArchive() {
+            const confirmed = confirm('📦 Export Project Archive\n\nThis will create a ZIP file containing:\n• All deliverables\n• Agent reports\n• Configuration files\n• Scripts and templates\n\nEstimated size: ~150MB\nProceed with export?');
+            
+            if (confirmed) {
+                alert('📦 Archive created successfully!\n\nFilename: testosterone-protocol-archive-20260218.zip\nSize: 147 MB\nLocation: /exports/\n\nDownload link will be emailed to you.');
+            }
+        }
+        
+        // Update countdown
+        function updateCountdown() {
+            const launchDate = new Date('2026-03-20T00:00:00Z');
+            const now = new Date();
+            const daysLeft = Math.ceil((launchDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysRemaining').textContent = daysLeft;
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+    </script>
+</body>
+</html>
