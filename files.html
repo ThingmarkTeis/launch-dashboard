@@ -141,9 +141,31 @@
     </div>
 
     <script>
-        // Check authentication
-        if (sessionStorage.getItem('authenticated') !== 'true') {
-            window.location.href = 'index.html';
+        // Enhanced authentication check
+        function checkAuth() {
+            const authToken = sessionStorage.getItem('auth_token');
+            const sessionValid = sessionStorage.getItem('session_valid');
+            const loginTime = sessionStorage.getItem('login_time');
+            
+            if (sessionValid !== 'true' || !authToken || !loginTime) {
+                alert('🚫 Authentication required. Redirecting to login...');
+                window.location.href = 'index.html';
+                return false;
+            }
+            
+            // Check session timeout
+            const timeElapsed = Date.now() - parseInt(loginTime);
+            if (timeElapsed > 8 * 60 * 60 * 1000) {
+                alert('⏰ Session expired. Please login again.');
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+        
+        if (!checkAuth()) {
+            // Exit if authentication fails
         }
         
         // Mock file system data (in production, this would come from your actual project)

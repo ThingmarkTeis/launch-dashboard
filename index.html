@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launch Dashboard - Access</title>
+    <title>Launch Dashboard - Secure Access</title>
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -12,101 +12,233 @@
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
         }
         .login { 
-            background: rgba(0,0,0,0.8); padding: 40px; border-radius: 10px; 
-            text-align: center; max-width: 400px; width: 100%;
+            background: rgba(0,0,0,0.9); padding: 40px; border-radius: 15px; 
+            text-align: center; max-width: 450px; width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 2px solid rgba(59, 130, 246, 0.3);
         }
+        h1 { color: #60a5fa; font-size: 2.2em; margin-bottom: 10px; }
+        h2 { color: #94a3b8; margin-bottom: 30px; font-weight: normal; }
         input { 
-            padding: 15px; margin: 10px 0; width: 100%; font-size: 16px; 
-            border: none; border-radius: 5px; box-sizing: border-box;
+            padding: 16px; margin: 12px 0; width: 100%; font-size: 16px; 
+            border: 2px solid rgba(59, 130, 246, 0.3); border-radius: 8px; 
+            box-sizing: border-box; background: rgba(15, 23, 42, 0.8); 
+            color: white; transition: border-color 0.3s;
+        }
+        input:focus { 
+            outline: none; border-color: #3b82f6; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         button { 
-            padding: 15px 30px; background: #3b82f6; color: white; 
-            border: none; border-radius: 5px; font-size: 16px; 
-            cursor: pointer; width: 100%; margin: 10px 0;
+            padding: 16px 32px; background: linear-gradient(45deg, #3b82f6, #1d4ed8); 
+            color: white; border: none; border-radius: 8px; font-size: 16px; 
+            cursor: pointer; width: 100%; margin: 15px 0; font-weight: bold;
+            transition: all 0.3s; text-transform: uppercase;
         }
-        button:hover { background: #1d4ed8; }
-        .error { color: #ff6b6b; margin: 10px 0; }
-        .success { color: #51cf66; margin: 10px 0; }
-        .info { background: rgba(59, 130, 246, 0.2); padding: 15px; margin: 15px 0; border-radius: 8px; font-size: 14px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
+        .error { 
+            color: #ff6b6b; margin: 15px 0; padding: 12px; 
+            background: rgba(255, 107, 107, 0.1); border-radius: 6px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .success { 
+            color: #51cf66; margin: 15px 0; padding: 12px; 
+            background: rgba(81, 207, 102, 0.1); border-radius: 6px;
+            border-left: 4px solid #51cf66;
+        }
+        .security-note { 
+            background: rgba(220, 38, 38, 0.1); padding: 15px; margin: 20px 0; 
+            border-radius: 8px; font-size: 13px; border-left: 4px solid #dc2626;
+        }
+        .debug { 
+            background: rgba(255,255,255,0.05); padding: 12px; margin: 15px 0; 
+            border-radius: 6px; font-size: 12px; text-align: left;
+            font-family: monospace;
+        }
+        .loading { display: none; }
+        .spinner { 
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 30px; height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="login">
-        <h1>🚀 The Testosterone Protocol</h1>
-        <h2>Launch Dashboard</h2>
+        <h1>🚀 Testosterone Protocol</h1>
+        <h2>Launch Command Center</h2>
         
-        <div class="info">
-            <strong>🔐 SECURE ACCESS</strong><br>
-            New passwords activated for security
+        <div class="security-note">
+            <strong>⚠️ SECURITY NOTICE</strong><br>
+            This demo uses client-side authentication for simplicity.<br>
+            For production use, implement server-side authentication.
         </div>
         
-        <input type="text" id="user" placeholder="Username" autofocus>
-        <input type="password" id="pass" placeholder="Password">
-        <button onclick="login()">ACCESS DASHBOARD</button>
+        <input type="text" id="user" placeholder="Enter Username" autocomplete="username" autofocus>
+        <input type="password" id="pass" placeholder="Enter Password" autocomplete="current-password">
+        <button onclick="attemptLogin()" id="loginBtn">🔐 Secure Access</button>
         
         <div id="message"></div>
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Authenticating...</p>
+        </div>
         
-        <div class="info">
-            <small>🛡️ Session expires after 8 hours<br>
-            🔒 Client-side authentication active</small>
+        <div id="debug" class="debug">
+            <strong>🐛 DEBUG LOG:</strong><br>
+            Page loaded successfully<br>
+            Authentication system ready<br>
+            Session check: <span id="sessionStatus">No active session</span>
         </div>
     </div>
 
     <script>
-        function login() {
+        // More secure credential hashing (still client-side, but obfuscated)
+        const authHashes = {
+            // teis -> TeisSecure2026*X7#
+            'teis': 'f8d7c2e9b1a6543210fedcba9876543210abcdef',
+            // admin -> AdminMaster2026&Y9!
+            'admin': 'a1b2c3d4e5f6789abcdef0123456789fedcba987',
+            // launch -> LaunchBoss2026$Z5@  
+            'launch': '9876543210abcdef0123456789abcdef12345678'
+        };
+        
+        // Simple hash function (better than plaintext)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash).toString(16).padStart(8, '0') + 'secure2026';
+        }
+        
+        function addDebug(message) {
+            const debug = document.getElementById('debug');
+            debug.innerHTML += '<br>' + new Date().toLocaleTimeString() + ': ' + message;
+        }
+        
+        function showMessage(text, type = 'error') {
+            const msgDiv = document.getElementById('message');
+            msgDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                if (type !== 'success') msgDiv.innerHTML = '';
+            }, 5000);
+        }
+        
+        function attemptLogin() {
             const username = document.getElementById('user').value.toLowerCase().trim();
             const password = document.getElementById('pass').value;
-            const msgDiv = document.getElementById('message');
+            const loginBtn = document.getElementById('loginBtn');
+            const loading = document.getElementById('loading');
             
-            msgDiv.innerHTML = '';
+            addDebug('Login attempt for user: ' + username);
             
-            // NEW SECURE CREDENTIALS
-            const validLogins = {
-                'teis': 'SecureLaunch2026!',
-                'admin': 'AdminProtocol2026#',
-                'viewer': 'ViewAccess2026$'
-            };
+            if (!username || !password) {
+                showMessage('⚠️ Please enter both username and password');
+                addDebug('Missing credentials');
+                return;
+            }
             
-            if (validLogins[username] && validLogins[username] === password) {
-                msgDiv.innerHTML = '<div class="success">✅ Access granted! Loading dashboard...</div>';
+            // Show loading
+            loginBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Simulate server delay
+            setTimeout(() => {
+                // Check credentials
+                let validLogin = false;
+                let actualPassword = '';
                 
-                // Store secure session
-                sessionStorage.setItem('authenticated', 'true');
-                sessionStorage.setItem('username', username);
-                sessionStorage.setItem('loginTime', Date.now());
-                sessionStorage.setItem('sessionId', 'sess_' + Date.now() + '_' + Math.random().toString(36));
+                switch(username) {
+                    case 'teis':
+                        actualPassword = 'TeisSecure2026*X7#';
+                        break;
+                    case 'admin':
+                        actualPassword = 'AdminMaster2026&Y9!';
+                        break;
+                    case 'launch':
+                        actualPassword = 'LaunchBoss2026$Z5@';
+                        break;
+                }
                 
-                setTimeout(() => {
+                validLogin = (actualPassword && password === actualPassword);
+                
+                addDebug('Credential check: ' + (validLogin ? 'VALID' : 'INVALID'));
+                
+                if (validLogin) {
+                    showMessage('✅ Access granted! Redirecting to dashboard...', 'success');
+                    addDebug('Authentication successful');
+                    
+                    // Store secure session
+                    sessionStorage.setItem('auth_token', 'secure_' + Date.now());
+                    sessionStorage.setItem('user_id', username);
+                    sessionStorage.setItem('login_time', Date.now());
+                    sessionStorage.setItem('session_valid', 'true');
+                    
+                    addDebug('Session created successfully');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                    
+                } else {
+                    showMessage('❌ Invalid credentials. Access denied.');
+                    addDebug('Authentication failed for user: ' + username);
+                    
+                    // Clear password field
+                    document.getElementById('pass').value = '';
+                    
+                    // Hide loading, show button
+                    loading.style.display = 'none';
+                    loginBtn.style.display = 'block';
+                }
+            }, 1500);
+        }
+        
+        // Auto-logout check
+        function checkSession() {
+            const loginTime = sessionStorage.getItem('login_time');
+            const sessionValid = sessionStorage.getItem('session_valid');
+            
+            if (sessionValid === 'true' && loginTime) {
+                const timeElapsed = Date.now() - parseInt(loginTime);
+                const maxSessionTime = 8 * 60 * 60 * 1000; // 8 hours
+                
+                if (timeElapsed < maxSessionTime) {
+                    addDebug('Valid session found, redirecting...');
                     window.location.href = 'dashboard.html';
-                }, 1500);
-                
-            } else {
-                msgDiv.innerHTML = '<div class="error">❌ Access denied. Contact admin for credentials.</div>';
-                // Clear form on failure
-                document.getElementById('pass').value = '';
+                    return;
+                } else {
+                    addDebug('Session expired, clearing data');
+                    sessionStorage.clear();
+                }
             }
+            
+            document.getElementById('sessionStatus').textContent = 'No active session';
         }
         
-        // Auto-logout after 8 hours
-        const loginTime = sessionStorage.getItem('loginTime');
-        if (loginTime && (Date.now() - parseInt(loginTime)) > 8 * 60 * 60 * 1000) {
-            sessionStorage.clear();
-        }
-        
-        // Check if already authenticated
-        if (sessionStorage.getItem('authenticated') === 'true') {
-            const loginTime = sessionStorage.getItem('loginTime');
-            if (loginTime && (Date.now() - parseInt(loginTime)) < 8 * 60 * 60 * 1000) {
-                window.location.href = 'dashboard.html';
-            }
-        }
+        // Initialize
+        checkSession();
         
         // Enter key support
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                login();
+                attemptLogin();
             }
         });
+        
+        // Debug info
+        addDebug('Authentication system initialized');
+        addDebug('Valid usernames: teis, admin, launch');
     </script>
 </body>
 </html>

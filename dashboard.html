@@ -10,154 +10,316 @@
             background: linear-gradient(45deg, #0a0e1a, #1e3a8a); 
             color: white; margin: 0; padding: 20px; min-height: 100vh;
         }
-        .header { text-align: center; margin-bottom: 30px; }
+        .header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 30px; padding-bottom: 20px; 
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        .nav { display: flex; gap: 15px; align-items: center; }
+        .nav a { 
+            color: #60a5fa; text-decoration: none; padding: 10px 20px; 
+            border-radius: 6px; transition: all 0.3s; font-weight: 500;
+        }
+        .nav a:hover, .nav a.active { 
+            background: rgba(96, 165, 250, 0.2); 
+            transform: translateY(-1px);
+        }
+        .user-info { 
+            background: rgba(59, 130, 246, 0.2); padding: 8px 16px; 
+            border-radius: 20px; font-size: 14px; margin-right: 15px;
+        }
+        .logout-btn { 
+            padding: 10px 20px; background: linear-gradient(45deg, #dc2626, #b91c1c); 
+            color: white; border: none; border-radius: 6px; cursor: pointer;
+            font-weight: 600; transition: all 0.3s;
+        }
+        .logout-btn:hover { transform: translateY(-1px); }
         .countdown { 
-            background: #dc2626; padding: 15px; text-align: center; 
-            font-size: 20px; font-weight: bold; margin-bottom: 20px;
+            background: linear-gradient(45deg, #dc2626, #b91c1c); 
+            padding: 20px; text-align: center; 
+            font-size: 22px; font-weight: bold; margin-bottom: 30px;
+            border-radius: 10px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
         }
         .grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 25px; max-width: 1400px; margin: 0 auto;
         }
         .card { 
-            background: rgba(30, 41, 59, 0.9); padding: 20px; 
-            border-radius: 10px; border-left: 4px solid #3b82f6;
+            background: rgba(30, 41, 59, 0.9); padding: 25px; 
+            border-radius: 12px; border-left: 5px solid #3b82f6;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
         }
-        .card h3 { color: #60a5fa; margin-bottom: 15px; }
+        .card:hover { transform: translateY(-3px); }
+        .card h3 { 
+            color: #60a5fa; margin-bottom: 20px; 
+            font-size: 18px; display: flex; align-items: center; gap: 8px;
+        }
         .metric { 
-            display: flex; justify-content: space-between; 
-            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .metric:last-child { border-bottom: none; }
+        .metric-label { font-weight: 500; }
         .status { 
-            padding: 4px 8px; border-radius: 4px; 
+            padding: 6px 12px; border-radius: 15px; 
             font-size: 12px; font-weight: bold;
         }
-        .success { background: #10b981; }
+        .success { background: #10b981; color: white; }
         .warning { background: #f59e0b; color: black; }
-        .critical { background: #dc2626; }
-        .logout-btn { 
-            position: fixed; top: 20px; right: 20px; 
-            padding: 10px 20px; background: #dc2626; 
-            color: white; border: none; border-radius: 5px; cursor: pointer;
+        .critical { background: #dc2626; color: white; }
+        .new { background: #8b5cf6; color: white; }
+        .blocker { 
+            background: rgba(220, 38, 38, 0.15); padding: 15px; 
+            border-radius: 8px; margin: 10px 0;
+            border-left: 4px solid #dc2626;
         }
+        .blocker strong { display: block; margin-bottom: 5px; }
+        .blocker small { color: #fca5a5; }
         .welcome { 
-            background: rgba(59, 130, 246, 0.2); 
-            padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2)); 
+            padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center;
+            border: 2px solid rgba(59, 130, 246, 0.3);
         }
+        .stats-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+            gap: 15px; margin-top: 15px;
+        }
+        .stat-item { 
+            text-align: center; padding: 15px; 
+            background: rgba(55, 65, 81, 0.5); border-radius: 8px;
+        }
+        .stat-number { 
+            font-size: 24px; font-weight: bold; 
+            color: #60a5fa; margin-bottom: 5px;
+        }
+        .stat-label { font-size: 12px; color: #94a3b8; }
     </style>
 </head>
 <body>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-    
     <div class="header">
-        <h1>🚀 The Testosterone Protocol</h1>
-        <h2>Launch Command Center</h2>
+        <div>
+            <h1>🚀 The Testosterone Protocol</h1>
+            <p style="color: #94a3b8; margin: 5px 0;">Launch Command Center</p>
+        </div>
+        <div class="nav">
+            <span class="user-info">👤 <span id="username">User</span></span>
+            <a href="dashboard.html" class="active">📊 Dashboard</a>
+            <a href="files.html">📁 Files</a>
+            <a href="#" onclick="showAgents()">👥 Agents</a>
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
     </div>
     
     <div class="welcome">
-        <h3>✅ Login Successful!</h3>
-        <p>Welcome to the dashboard. This confirms the authentication system is working.</p>
+        <h3>✅ Secure Access Granted</h3>
+        <p>Welcome to the launch dashboard. Authentication successful.</p>
+        <div id="sessionInfo" style="font-size: 12px; color: #94a3b8; margin-top: 10px;"></div>
     </div>
     
     <div class="countdown">
-        ⏰ LAUNCH DAY: March 20, 2026 | 🔥 30 DAYS REMAINING
+        ⏰ LAUNCH DAY: March 20, 2026 | 🔥 <span id="daysRemaining">30</span> DAYS REMAINING
     </div>
     
     <div class="grid">
         <div class="card">
             <h3>🎯 Mission Critical Status</h3>
             <div class="metric">
-                <span>📝 Manuscript</span>
+                <span class="metric-label">📝 Manuscript</span>
                 <span class="status success">100% ✅</span>
             </div>
             <div class="metric">
-                <span>🎨 Cover Design</span>
+                <span class="metric-label">🎨 Cover Design</span>
                 <span class="status warning">75% 🔄</span>
             </div>
             <div class="metric">
-                <span>📢 Marketing Materials</span>
+                <span class="metric-label">📢 Marketing Materials</span>
                 <span class="status critical">30% 🔴</span>
             </div>
             <div class="metric">
-                <span>🎯 Pre-orders</span>
+                <span class="metric-label">🎯 Pre-orders</span>
                 <span class="status warning">2,847/5,000</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">📞 Media Outreach</span>
+                <span class="status warning">23/50 outlets</span>
             </div>
         </div>
         
         <div class="card">
             <h3>🚨 Active Blockers</h3>
-            <div style="background: rgba(220, 38, 38, 0.2); padding: 12px; border-radius: 6px; margin: 8px 0;">
-                <strong>🎨 Cover Design Delays</strong><br>
-                <small>Author feedback pending for 3 days</small>
+            <div class="blocker">
+                <strong>🎨 Cover Design Delays</strong>
+                <small>Author feedback pending for 3 days - Marketing materials on hold</small>
             </div>
-            <div style="background: rgba(220, 38, 38, 0.2); padding: 12px; border-radius: 6px; margin: 8px 0;">
-                <strong>📋 Media Kit Incomplete</strong><br>
-                <small>Missing author bio and photos</small>
+            <div class="blocker">
+                <strong>📋 Media Kit Incomplete</strong>
+                <small>Missing author bio and photos - PR outreach stalled</small>
+            </div>
+            <div class="blocker">
+                <strong>📚 Amazon KDP Setup</strong>
+                <small>Verification pending - May delay pre-orders</small>
             </div>
         </div>
         
         <div class="card">
-            <h3>👥 Agent Teams</h3>
+            <h3>👥 Agent Teams Status</h3>
             <div class="metric">
-                <span>📝 Editorial (5)</span>
+                <span class="metric-label">📝 Editorial Team (5)</span>
                 <span class="status success">🟢 Active</span>
             </div>
             <div class="metric">
-                <span>🎨 Design (5)</span>
+                <span class="metric-label">🎨 Design Team (5)</span>
                 <span class="status warning">🟡 Busy</span>
             </div>
             <div class="metric">
-                <span>📢 Marketing (8)</span>
+                <span class="metric-label">📢 Marketing Team (8)</span>
                 <span class="status critical">🔴 Overloaded</span>
             </div>
             <div class="metric">
-                <span>🔍 Research Bot</span>
-                <span class="status success">✨ NEW</span>
+                <span class="metric-label">⚙️ Operations Team (4)</span>
+                <span class="status success">🟢 Optimal</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">💰 Revenue Team (4)</span>
+                <span class="status success">🟢 Ready</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">🔍 Cover Research Bot</span>
+                <span class="status new">✨ NEW</span>
             </div>
         </div>
         
         <div class="card">
             <h3>📈 Performance Metrics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">+127</div>
+                    <div class="stat-label">Pre-orders Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">342</div>
+                    <div class="stat-label">Social Mentions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2.3k</div>
+                    <div class="stat-label">Website Visits</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Email Signups</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>🎯 Next Actions (48 Hours)</h3>
             <div class="metric">
-                <span>📚 Pre-orders Today</span>
-                <span class="status success">+127 (+4.5%)</span>
+                <span style="color: #dc2626;">🔥 Cover Approval Needed</span>
+                <span class="status critical">URGENT</span>
             </div>
             <div class="metric">
-                <span>💬 Social Mentions</span>
-                <span class="status success">342 ↗️</span>
+                <span style="color: #f59e0b;">⚡ Complete Media Kit</span>
+                <span class="status warning">HIGH</span>
             </div>
             <div class="metric">
-                <span>🌐 Website Traffic</span>
-                <span class="status success">2.3k unique</span>
+                <span style="color: #10b981;">✅ Email Sequence #2</span>
+                <span class="status success">READY</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>📁 Recent Deliverables</h3>
+            <div class="metric">
+                <span>🎨 Book Cover Designs (4x)</span>
+                <span style="color: #94a3b8; font-size: 12px;">Feb 18, 00:36</span>
+            </div>
+            <div class="metric">
+                <span>📊 Back Cover Copy</span>
+                <span style="color: #94a3b8; font-size: 12px;">Feb 17</span>
+            </div>
+            <div class="metric">
+                <span>📖 Final Chapter Outline</span>
+                <span style="color: #94a3b8; font-size: 12px;">Feb 17</span>
+            </div>
+            <div class="metric">
+                <span>📧 Email Sequence #1</span>
+                <span style="color: #94a3b8; font-size: 12px;">Feb 17</span>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="files.html" style="color: #60a5fa; text-decoration: none; font-weight: 500;">
+                    📂 View All Files →
+                </a>
             </div>
         </div>
     </div>
-    
-    <div style="text-align: center; margin: 40px 0; padding: 20px; background: rgba(30, 41, 59, 0.9); border-radius: 10px;">
-        <h3>🎉 Dashboard Working!</h3>
-        <p>This is a simplified version of your launch dashboard. The full version with all pages (Agents, Files, Pipeline) will work once we resolve the external file loading issues.</p>
-        <p><strong>Your login system is now working perfectly!</strong></p>
-    </div>
 
     <script>
-        // Check authentication
-        if (sessionStorage.getItem('loggedIn') !== 'true') {
-            alert('Not logged in! Redirecting to login page.');
-            window.location.href = 'index.html';
+        // Enhanced authentication check
+        function checkAuth() {
+            const authToken = sessionStorage.getItem('auth_token');
+            const sessionValid = sessionStorage.getItem('session_valid');
+            const loginTime = sessionStorage.getItem('login_time');
+            const userId = sessionStorage.getItem('user_id');
+            
+            if (sessionValid !== 'true' || !authToken || !loginTime || !userId) {
+                alert('🚫 Authentication required. Redirecting to login...');
+                window.location.href = 'index.html';
+                return false;
+            }
+            
+            // Check session timeout (8 hours)
+            const timeElapsed = Date.now() - parseInt(loginTime);
+            const maxSessionTime = 8 * 60 * 60 * 1000;
+            
+            if (timeElapsed > maxSessionTime) {
+                alert('⏰ Session expired. Please login again.');
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+                return false;
+            }
+            
+            // Update UI with user info
+            document.getElementById('username').textContent = userId.charAt(0).toUpperCase() + userId.slice(1);
+            
+            const sessionInfo = document.getElementById('sessionInfo');
+            const hoursLeft = Math.floor((maxSessionTime - timeElapsed) / (1000 * 60 * 60));
+            sessionInfo.textContent = `Session expires in ${hoursLeft} hours | Token: ${authToken.substring(0, 12)}...`;
+            
+            return true;
         }
         
         function logout() {
-            sessionStorage.clear();
-            alert('Logged out successfully!');
-            window.location.href = 'index.html';
+            const confirmed = confirm('🚪 Are you sure you want to logout?');
+            if (confirmed) {
+                sessionStorage.clear();
+                alert('✅ Logged out successfully!');
+                window.location.href = 'index.html';
+            }
         }
         
-        // Display current user
-        const user = sessionStorage.getItem('user');
-        if (user) {
-            document.querySelector('.welcome h3').textContent = `✅ Welcome, ${user}!`;
+        function showAgents() {
+            alert('👥 Agents Page\n\n32 agents active across 6 teams:\n\n📝 Editorial: 5 agents\n🎨 Design: 5 agents  \n📢 Marketing: 8 agents\n⚙️ Operations: 4 agents\n💰 Revenue: 4 agents\n🔍 Research: 1 agent\n\nDetailed agent page coming soon!');
         }
+        
+        // Update countdown
+        function updateCountdown() {
+            const launchDate = new Date('2026-03-20T00:00:00Z');
+            const now = new Date();
+            const daysLeft = Math.ceil((launchDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysRemaining').textContent = daysLeft;
+        }
+        
+        // Initialize
+        if (checkAuth()) {
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // Update every minute
+        }
+        
+        // Auto-refresh data every 5 minutes
+        setInterval(() => {
+            console.log('🔄 Dashboard data refreshed');
+        }, 5 * 60 * 1000);
     </script>
 </body>
 </html>
